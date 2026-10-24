@@ -1,5 +1,6 @@
 //! Bounded Git metadata parsing. Never invokes Git, hooks, filters, or repository configuration.
-use crate::{model::*, platform};
+use crate::{content, model::*, platform};
+use sha1::{Digest, Sha1};
 use std::{
     collections::BTreeMap,
     io::Read,
@@ -141,6 +142,9 @@ fn parse_index_interruptible(
     if data.len().saturating_sub(pos) != 20 {
         return Err("unsupported index checksum length".into());
     }
+    if Sha1::digest(&data[..pos]).as_slice() != &data[pos..] {
+        return Err("Git index SHA-1 checksum mismatch".into());
+    }
     Ok(out)
 }
 
@@ -162,7 +166,7 @@ pub fn collect(report: &mut Report, stop: &dyn Fn() -> bool) {
             return;
         }
         let root = marker.parent().unwrap();
-        let mut repo=Repository {path:root.to_string_lossy().into_owned(),kind:if a.kind=="directory"{"repository"}else{"linked_worktree_or_submodule"}.into(),head:None,gitdir_claim:None,common_dir_claim:None,locked:None,index_entries:None,possibly_modified:vec![],untracked:vec![],limitations:vec!["Metadata comparison only; content dirtiness, staged changes, ignored rules and HEAD/index equivalence are not verified.".into(),"Index checksum integrity is unverified; index entries are untrusted observations, not authenticated tracking evidence.".into()]};
+        let mut repo=Repository {path:root.to_string_lossy().into_owned(),kind:if a.kind=="directory"{"repository"}else{"linked_worktree_or_submodule"}.into(),head:None,gitdir_claim:None,common_dir_claim:None,resolved_gitdir:None,resolved_common_dir:None,index_checksum:None,locked:None,index_entries:None,possibly_modified:vec![],untracked:vec![],limitations:vec!["Metadata comparison only; content dirtiness, staged changes, ignored rules and HEAD/index equivalence are not verified.".into(),"Index checksum consistency is not authentication; repository metadata remains untrusted.".into()]};
         let gitdir = if a.kind == "directory" {
             Some(marker.clone())
         } else {
@@ -170,17 +174,12 @@ pub fn collect(report: &mut Report, stop: &dyn Fn() -> bool) {
                 Ok(value) => {
                     if let Some(claim) = value.strip_prefix("gitdir: ") {
                         repo.gitdir_claim = Some(claim.into());
-                        // Do not resolve untrusted relative dot paths or inspect un-inventoried targets.
-                        let target = PathBuf::from(claim);
-                        if target.is_absolute()
-                            && artifacts
-                                .get(&target)
-                                .is_some_and(|a| a.kind == "directory")
-                        {
-                            Some(target)
-                        } else {
-                            repo.limitations.push("Gitdir claim not resolved: target must be an exact inventoried absolute path; external worktree state remains unknown.".into());
-                            None
+                        match content::resolve(root, claim, &artifacts) {
+                            Ok(target) if artifacts[&target].kind == "directory" => Some(target),
+                            _ => {
+                                repo.limitations.push("Gitdir claim unresolved: no inventoried directory target through safe components; external state remains unknown.".into());
+                                None
+                            }
                         }
                     } else {
                         repo.limitations.push("Malformed gitdir file".into());
@@ -194,6 +193,7 @@ pub fn collect(report: &mut Report, stop: &dyn Fn() -> bool) {
             }
         };
         if let Some(dir) = gitdir {
+            repo.resolved_gitdir = Some(dir.to_string_lossy().into_owned());
             match text(&dir.join("HEAD"), &artifacts) {
                 Ok(v) => repo.head = Some(v),
                 Err(e) => repo.limitations.push(format!("HEAD: {e}")),
@@ -207,7 +207,18 @@ pub fn collect(report: &mut Report, stop: &dyn Fn() -> bool) {
             };
             if artifacts.contains_key(&dir.join("commondir")) {
                 match text(&dir.join("commondir"), &artifacts) {
-                    Ok(v) => repo.common_dir_claim = Some(v),
+                    Ok(v) => {
+                        repo.resolved_common_dir = content::resolve(&dir, &v, &artifacts)
+                            .ok()
+                            .filter(|p| artifacts[p].kind == "directory")
+                            .map(|p| p.to_string_lossy().into_owned());
+                        if repo.resolved_common_dir.is_none() {
+                            repo.limitations.push(
+                                "Common Git directory is unresolved or outside inventory.".into(),
+                            );
+                        }
+                        repo.common_dir_claim = Some(v);
+                    }
                     Err(e) => repo.limitations.push(e),
                 }
             }
@@ -215,6 +226,7 @@ pub fn collect(report: &mut Report, stop: &dyn Fn() -> bool) {
                 .and_then(|d| parse_index_interruptible(&d, stop))
             {
                 Ok(entries) => {
+                    repo.index_checksum = Some("sha1_consistent_not_authenticated".into());
                     repo.index_entries = Some(entries.len());
                     let indexed: BTreeMap<_, _> =
                         entries.iter().map(|e| (root.join(&e.path), e)).collect();

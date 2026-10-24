@@ -21,7 +21,7 @@ fn run() -> Result<i32, String> {
             return Ok(0);
         }
         Some("--help") | None => {
-            println!("Colossus: read-only Windows developer-workspace auditor\nUsage: colossus audit --root ABSOLUTE_PATH [--root PATH ...] [--format json|text] [--output ABSOLUTE_NEW_FILE] [--max-entries N] [--max-depth N] [--deadline-ms N] [--quiet]\nDefault: text to stdout; one worker; no links followed. Output parent must exist outside scan roots.\nExit: 0 complete within stated limits; 1 error; 2 incomplete; 130 cancelled. Ctrl-C requests a partial report.");
+            println!("Colossus: read-only Windows developer-workspace auditor\nUsage: colossus audit --root ABSOLUTE_PATH [--root PATH ...] [--format json|text] [--output ABSOLUTE_NEW_FILE] [--max-entries N] [--max-depth N] [--deadline-ms N] [--quiet] [--provenance] [--hash-file ABSOLUTE_FILE ...] [--max-content-bytes N]\nDefault: text to stdout; one worker; no links followed. Provenance is opt-in; hash files must be explicitly selected. Additional content budget defaults to 64 MiB (1 MiB/manifest, 32 MiB/hash file). Output parent must exist outside scan roots.\nExit: 0 complete within stated limits; 1 error; 2 incomplete; 130 cancelled. Ctrl-C requests a partial report.");
             return Ok(0);
         }
         Some("audit") => {}
@@ -36,6 +36,10 @@ fn run() -> Result<i32, String> {
             options.progress = false;
             continue;
         }
+        if a == "--provenance" {
+            options.provenance = true;
+            continue;
+        }
         let v = args
             .next()
             .ok_or_else(|| format!("missing value for {a}"))?;
@@ -43,6 +47,10 @@ fn run() -> Result<i32, String> {
             "--root" => options.roots.push(PathBuf::from(v)),
             "--format" => format = v,
             "--output" => output = Some(PathBuf::from(v)),
+            "--hash-file" => options.hash_files.push(PathBuf::from(v)),
+            "--max-content-bytes" => {
+                options.max_content_bytes = v.parse().map_err(|_| "invalid content byte budget")?
+            }
             "--max-entries" => {
                 options.max_entries = v.parse().map_err(|_| "invalid entry limit")?
             }

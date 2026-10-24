@@ -50,6 +50,9 @@ pub struct Repository {
     pub head: Option<String>,
     pub gitdir_claim: Option<String>,
     pub common_dir_claim: Option<String>,
+    pub resolved_gitdir: Option<String>,
+    pub resolved_common_dir: Option<String>,
+    pub index_checksum: Option<String>,
     pub locked: Option<bool>,
     pub index_entries: Option<usize>,
     pub possibly_modified: Vec<String>,
@@ -87,8 +90,67 @@ pub struct Report {
     pub evidence: Vec<Evidence>,
     pub candidates: Vec<Candidate>,
     pub repositories: Vec<Repository>,
+    pub provenance: Provenance,
     pub issues: Vec<Issue>,
     pub totals: Totals,
     pub plan: Plan,
     pub limitations: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct Provenance {
+    pub enabled: bool,
+    pub bytes_read: u64,
+    pub projects: Vec<Project>,
+    pub dependencies: Vec<Dependency>,
+    pub claims: Vec<ArtifactClaim>,
+    pub ownership: Vec<Ownership>,
+    pub hashes: Vec<ContentHash>,
+    pub duplicate_groups: Vec<Vec<String>>,
+    pub limitations: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Project {
+    pub id: String,
+    pub root: String,
+    pub manifest_artifact_id: String,
+    pub ecosystem: String,
+    pub declared_name: Option<String>,
+    pub evidence_id: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Dependency {
+    pub project_id: String,
+    pub declared_path: String,
+    pub relationship: String,
+    pub target_artifact_id: Option<String>,
+    pub resolution: String,
+    pub evidence_id: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ArtifactClaim {
+    pub record_artifact_id: String,
+    pub target_artifact_id: Option<String>,
+    pub declared_path: String,
+    pub declared_owner: Option<String>,
+    pub declared_generation_method: Option<String>,
+    pub declared_source_revision: Option<String>,
+    pub retention_holds: Vec<String>,
+    pub resolution: String,
+    pub evidence_id: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Ownership {
+    pub artifact_id: String,
+    pub project_ids: Vec<String>,
+    pub declared_owners: Vec<String>,
+    pub status: String,
+    pub evidence_ids: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ContentHash {
+    pub artifact_id: String,
+    pub sha256: String,
+    pub bytes: u64,
+    pub evidence_id: String,
 }

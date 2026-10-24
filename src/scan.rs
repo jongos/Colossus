@@ -1,4 +1,4 @@
-use crate::{git, model::*, platform};
+use crate::{git, model::*, platform, provenance};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
@@ -17,6 +17,9 @@ pub struct Options {
     pub max_depth: usize,
     pub deadline_ms: Option<u64>,
     pub progress: bool,
+    pub provenance: bool,
+    pub hash_files: Vec<PathBuf>,
+    pub max_content_bytes: u64,
 }
 impl Options {
     pub fn new(roots: Vec<PathBuf>) -> Self {
@@ -27,6 +30,9 @@ impl Options {
             max_depth: 128,
             deadline_ms: None,
             progress: false,
+            provenance: false,
+            hash_files: vec![],
+            max_content_bytes: 64 * 1024 * 1024,
         }
     }
 }
@@ -247,14 +253,15 @@ fn audit_observed(
         .map(|p| p.to_string_lossy().into_owned())
         .collect();
     let mut s = Scanner { options, seen: BTreeSet::new(), start: Instant::now(), bounded: false, report: Report {
-        schema_version:"1.0.0".into(),tool_version:env!("CARGO_PKG_VERSION").into(),timestamp_unix:now,
+        schema_version:"1.1.0".into(),tool_version:env!("CARGO_PKG_VERSION").into(),timestamp_unix:now,
         complete:true,cancelled:false,inventory_coverage:"metadata only".into(),roots:roots.clone(),root_identities:vec![],artifacts:vec![],evidence:vec![],candidates:vec![],repositories:vec![],issues:vec![],
         totals:Totals{logical_bytes:0,allocated_known_bytes:0,allocated_unknown_files:0,unique_files:0,hard_link_aliases:0},
-        plan:Plan{schema_version:"1.0.0".into(),roots,candidate_scope:vec![],protected_paths:vec![],required_approval:"No executable operations. A future exact manifest requires separate approval.".into(),manifest_digest:String::new()},
+        provenance:Provenance::default(),
+        plan:Plan{schema_version:"1.1.0".into(),roots,candidate_scope:vec![],protected_paths:vec![],required_approval:"No executable operations. A future exact manifest requires separate approval.".into(),manifest_digest:String::new()},
         limitations: vec!["Windows local drives only; network shares, alternate data streams and directory allocation are excluded.".into(),
             "Not an atomic filesystem snapshot. Concurrent same-size writes with preserved timestamps can escape detection.".into(),
             "Open handles temporarily deny rename/deletion; scans can fail when other handles deny sharing.".into(),
-            "No process-reference, ownership, build provenance, content-duplicate or recovery verification. Dependencies and reconstruction costs are unknown.".into(),
+            "No process-reference, exclusive ownership, executed-build provenance or recovery verification. Optional declarations and hashes remain evidence only.".into(),
             "File reads may affect access timestamps through OS policy; no source content, last-write time, Git or configuration writes are requested.".into(),
             "Allocated sizes are filesystem-reported per-file allocation, not promised reclaimable space; deduplication/compression/shared extents can differ.".into(),
             "Concurrency is bounded to one worker. Cancellation is checked between operations; a blocked filesystem call cannot be interrupted.".into()] } };
@@ -300,6 +307,22 @@ fn audit_observed(
                     .is_some_and(|m| start.elapsed() >= Duration::from_millis(m))
         });
     }
+    if options.provenance || !options.hash_files.is_empty() {
+        s.report.inventory_coverage =
+            "metadata plus explicitly requested bounded content evidence".into();
+        provenance::collect(
+            &mut s.report,
+            options.provenance,
+            &options.hash_files,
+            options.max_content_bytes,
+            &|| {
+                options.cancel.load(Ordering::Relaxed)
+                    || options
+                        .deadline_ms
+                        .is_some_and(|m| start.elapsed() >= Duration::from_millis(m))
+            },
+        );
+    }
     // Revalidate inventoried entries after evidence collection. Pinning each chain prevents
     // a renamed ancestor or inserted junction from redirecting this read outside scope.
     for index in 0..s.report.artifacts.len() {
@@ -343,6 +366,7 @@ fn audit_observed(
         );
     }
     classify(&mut s.report);
+    provenance::attach_candidates(&mut s.report);
     for a in &s.report.artifacts {
         if a.kind == "file" {
             if a.counted {
@@ -382,6 +406,30 @@ mod tests {
         .unwrap();
         assert!(!r.complete);
         assert!(r.issues.iter().any(|i| i.code == "changed_during_scan"));
+    }
+    #[test]
+    fn filesystem_identity_mismatch_stops_before_descending() {
+        let p = std::env::temp_dir().join(format!("colossus-volume-{}", std::process::id()));
+        fs::create_dir(&p).unwrap();
+        fs::write(p.join("unvisited"), b"fixture").unwrap();
+        let options = Options::new(vec![p.clone()]);
+        let mut report = audit(&options).unwrap();
+        report.artifacts.clear();
+        let pin = platform::pin(&p).unwrap();
+        let mut scanner = Scanner {
+            options: &options,
+            report,
+            seen: BTreeSet::new(),
+            start: Instant::now(),
+            bounded: false,
+        };
+        scanner.visit(&p, pin.stat.volume ^ 1, None, 0);
+        assert!(scanner.report.artifacts.is_empty());
+        assert!(scanner
+            .report
+            .issues
+            .iter()
+            .any(|i| i.code == "filesystem_boundary"));
     }
 }
 

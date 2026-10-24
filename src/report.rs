@@ -31,8 +31,40 @@ pub fn human(r: &Report) -> String {
             }
         }
         for b in &c.blockers {
-            s.push_str(&format!("  Blocker: {b}\n"));
+            s.push_str(&format!("  Blocker: {b:?}\n"));
         }
+    }
+    s.push_str(&format!("\nProvenance: {}; content bytes read: {}\nProjects: {}; local/workspace declarations: {}; artifact claims: {}\nSelected-file hashes: {}; equal-hash groups: {} (not cleanup authority)\n",
+        if r.provenance.enabled {"opt-in declarations"}else{"manifest collection disabled"},r.provenance.bytes_read,r.provenance.projects.len(),r.provenance.dependencies.len(),r.provenance.claims.len(),r.provenance.hashes.len(),r.provenance.duplicate_groups.len()));
+    for owner in r
+        .provenance
+        .ownership
+        .iter()
+        .filter(|o| matches!(o.status.as_str(), "shared_context" | "conflicting_claims"))
+    {
+        s.push_str(&format!(
+            "Ownership {:?}: {}; projects {:?}; claims {:?}; evidence {:?}\n",
+            owner.artifact_id,
+            owner.status,
+            owner.project_ids,
+            owner.declared_owners,
+            owner.evidence_ids
+        ));
+    }
+    for dep in &r.provenance.dependencies {
+        s.push_str(&format!(
+            "Dependency {:?} -> {:?}: {:?}; evidence {}\n",
+            dep.project_id, dep.declared_path, dep.resolution, dep.evidence_id
+        ));
+    }
+    for hash in &r.provenance.hashes {
+        s.push_str(&format!(
+            "Hash {}: {}; {} bytes; evidence {}\n",
+            hash.artifact_id, hash.sha256, hash.bytes, hash.evidence_id
+        ));
+    }
+    for limitation in &r.provenance.limitations {
+        s.push_str(&format!("- {limitation}\n"));
     }
     for i in &r.issues {
         s.push_str(&format!("\n{} {:?}: {:?}\n", i.code, i.path, i.detail));
@@ -56,6 +88,7 @@ pub fn human(r: &Report) -> String {
     s
 }
 pub fn write_new(path: &Path, data: &[u8], report: &Report) -> io::Result<()> {
+    platform::validate_components(path)?;
     let name = path.file_name().and_then(|n| n.to_str()).ok_or_else(|| {
         io::Error::new(
             io::ErrorKind::InvalidInput,

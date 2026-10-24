@@ -62,6 +62,7 @@ mod native {
     }
     #[link(name = "kernel32")]
     extern "system" {
+        fn GetDriveTypeW(root: *const u16) -> u32;
         fn GetFileInformationByHandle(handle: *mut c_void, info: *mut Info) -> i32;
         fn GetFileInformationByHandleEx(
             handle: *mut c_void,
@@ -70,14 +71,29 @@ mod native {
             size: u32,
         ) -> i32;
     }
-    pub fn open(path: &Path, _content: bool) -> io::Result<File> {
+    pub fn open(path: &Path, content: bool) -> io::Result<File> {
+        validate_components(path)?;
         // FILE_READ_ATTRIBUTES alone does not participate in share-access checks.
         // GENERIC_READ is required for deny-delete pinning to be effective.
         OpenOptions::new()
             .access_mode(0x80000000)
-            .share_mode(0x1 | 0x2)
+            .share_mode(if content { 0x1 } else { 0x1 | 0x2 })
             .custom_flags(0x02000000 | 0x00200000)
             .open(path)
+    }
+    pub fn local_drive(root: &Path) -> io::Result<()> {
+        use std::os::windows::ffi::OsStrExt;
+        let wide: Vec<_> = root.as_os_str().encode_wide().chain(Some(0)).collect();
+        // SAFETY: the buffer is NUL terminated and valid for this synchronous call.
+        let kind = unsafe { GetDriveTypeW(wide.as_ptr()) };
+        if matches!(kind, 2 | 3 | 5 | 6) {
+            Ok(())
+        } else {
+            Err(io::Error::new(
+                io::ErrorKind::Unsupported,
+                "unknown or remote drive; local filesystems only",
+            ))
+        }
     }
     pub fn stat(file: &File) -> io::Result<Stat> {
         let mut info = Info::default();
@@ -153,6 +169,7 @@ pub struct Pinned {
     pub stat: Stat,
 }
 pub fn pin(path: &Path) -> io::Result<Pinned> {
+    validate_components(path)?;
     if !path.is_absolute() {
         return Err(io::Error::new(
             io::ErrorKind::InvalidInput,
@@ -185,6 +202,10 @@ pub fn pin(path: &Path) -> io::Result<Pinned> {
             }
             _ => current.push(part.as_os_str()),
         }
+        #[cfg(windows)]
+        if matches!(part, Component::RootDir) {
+            native::local_drive(&current)?;
+        }
         let file = open(&current, false)?;
         if stat(&file)?.reparse {
             return Err(io::Error::new(
@@ -203,4 +224,40 @@ pub fn pin(path: &Path) -> io::Result<Pinned> {
         handles,
         stat: final_stat,
     })
+}
+
+pub fn validate_components(path: &Path) -> io::Result<()> {
+    for component in path.components() {
+        if let Component::Normal(name) = component {
+            let text = name.to_str().ok_or_else(|| {
+                io::Error::new(io::ErrorKind::InvalidInput, "non-Unicode path component")
+            })?;
+            let stem = text.split('.').next().unwrap_or("").to_ascii_uppercase();
+            let numbered = stem
+                .strip_prefix("COM")
+                .or_else(|| stem.strip_prefix("LPT"))
+                .is_some_and(|n| {
+                    matches!(
+                        n,
+                        "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "¹" | "²" | "³"
+                    )
+                });
+            if text.contains(':')
+                || text.ends_with('.')
+                || text.ends_with(' ')
+                || text.contains('\0')
+                || matches!(
+                    stem.as_str(),
+                    "CON" | "PRN" | "AUX" | "NUL" | "CLOCK$" | "CONIN$" | "CONOUT$"
+                )
+                || numbered
+            {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    "device, stream or ambiguous Windows path component",
+                ));
+            }
+        }
+    }
+    Ok(())
 }

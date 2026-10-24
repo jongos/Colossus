@@ -16,10 +16,13 @@ def snapshot(root):
             for p in root.rglob('*') if p.is_file()}
 
 
-def run(binary, root):
+def run(binary, root, provenance=False):
     with tempfile.TemporaryFile(mode='w+b') as out, tempfile.TemporaryFile(mode='w+b') as err:
         started = time.perf_counter()
-        proc = subprocess.Popen([str(binary), 'audit', '--root', str(root), '--format', 'json', '--quiet'], stdout=out, stderr=err)
+        command=[str(binary), 'audit', '--root', str(root), '--format', 'json', '--quiet']
+        if provenance:
+            command.append('--provenance')
+        proc = subprocess.Popen(command, stdout=out, stderr=err)
         peak = 0
         if os.name == 'nt':
             class Counters(ctypes.Structure):
@@ -48,21 +51,28 @@ def main():
     ap.add_argument('--binary', type=Path, required=True)
     ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--files', type=int, default=10000)
+    ap.add_argument('--provenance', action='store_true')
     args = ap.parse_args()
+    if args.files < 1:
+        ap.error('--files must be positive')
     binary = args.binary.resolve(strict=True)
     root = Path(tempfile.mkdtemp(prefix='colossus-benchmark-'))
     for i in range(args.files):
         folder = root / f'group-{i//100:04d}'
         folder.mkdir(exist_ok=True)
         (folder / f'file-{i:06d}.txt').write_bytes(b'x' * 1024)
+    if args.provenance:
+        (root/'package.json').write_text('{"name":"synthetic-benchmark"}',encoding='utf-8')
     before = snapshot(root)
-    report, timing = run(binary, root)
+    expected_bytes=sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
+    report, timing = run(binary, root,args.provenance)
     preserved = before == snapshot(root)
     assert preserved
-    assert report['totals']['logical_bytes'] == args.files * 1024
+    assert report['totals']['logical_bytes'] == expected_bytes
     result = {'platform': platform.platform(), 'architecture': platform.machine(), 'processor': platform.processor(),
               'logical_cpus': os.cpu_count(), 'workload': {'files': args.files, 'bytes_per_file': 1024, 'directories': (args.files+99)//100},
               'source_preserved_content_and_mtime': preserved, 'complete': report['complete'], 'totals': report['totals'], **timing,
+              'provenance_enabled':args.provenance,'provenance_projects':len(report.get('provenance',{}).get('projects',[])),
               'limitations': ['Single local run; warm filesystem cache after preservation hashing; not an SSD throughput benchmark.',
                               '10ms peak-working-set sampling can miss brief peaks. No network or unsupported platforms measured.',
                               'Fixture retained in OS temp directory. No destructive cleanup performed.']}

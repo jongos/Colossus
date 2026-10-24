@@ -10,7 +10,9 @@ Implementation references checked during development:
 
 Recheck relevant primary documentation before implementing adapters: [Kondo](https://github.com/tbillington/kondo), [dua](https://github.com/Byron/dua-cli), [Czkawka](https://github.com/qarmin/czkawka), [uv cache](https://docs.astral.sh/uv/concepts/cache/), [pnpm store](https://pnpm.io/cli/store), [Send2Trash](https://github.com/arsenetar/send2trash), [FreeDesktop Trash spec](https://specifications.freedesktop.org/trash/latest/), [Windows free space](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskfreespaceexa). Their cleanup behavior is not implemented or relied upon in Phase 1.
 
-Next milestone: strengthen read-only evidence before adding mutations. Independently review handle/path boundaries, add a safe bounded content-hash collector and build provenance/ownership model, resolve authorized worktree metadata with explicit scope, and validate real ACL/mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references.
+Milestone 2 completed locally: bounded content hashes, declared provenance and ownership context, inventoried worktree metadata resolution, and expanded Windows filesystem tests. See [results and remaining validation limits](MILESTONE-2.md).
+
+Next milestone: corroborate declared build provenance and dependency relationships without executing builds, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
 
 Later milestones, **plan only**:
 

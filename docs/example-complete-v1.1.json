@@ -1,0 +1,642 @@
+{
+  "schema_version": "1.1.0",
+  "tool_version": "0.2.0",
+  "timestamp_unix": 1792852687,
+  "complete": true,
+  "cancelled": false,
+  "inventory_coverage": "metadata plus explicitly requested bounded content evidence",
+  "roots": [
+    "C:\\synthetic\\milestone2"
+  ],
+  "root_identities": [
+    "eef2c330f2c2fc39:00000000000000000002000000191cc3"
+  ],
+  "artifacts": [
+    {
+      "id": "a0",
+      "path": "C:\\synthetic\\milestone2",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cc3",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373262860679058,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a1",
+      "path": "C:\\synthetic\\milestone2\\colossus.artifacts.json",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cd3",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 219,
+      "allocated_bytes": 224,
+      "modified_filetime": 134373262860679058,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a2",
+      "path": "C:\\synthetic\\milestone2\\rust",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cc4",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373262860655832,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a3",
+      "path": "C:\\synthetic\\milestone2\\rust\\Cargo.toml",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191ccb",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 94,
+      "allocated_bytes": 96,
+      "modified_filetime": 134373262860655832,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a4",
+      "path": "C:\\synthetic\\milestone2\\shared",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cc8",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373262860668727,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a5",
+      "path": "C:\\synthetic\\milestone2\\shared\\build",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cca",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373262860668727,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a6",
+      "path": "C:\\synthetic\\milestone2\\shared\\build\\one.bin",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cd0",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 22,
+      "allocated_bytes": 24,
+      "modified_filetime": 134373262860668727,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a7",
+      "path": "C:\\synthetic\\milestone2\\shared\\build\\two.bin",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cd2",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 22,
+      "allocated_bytes": 24,
+      "modified_filetime": 134373262860679058,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a8",
+      "path": "C:\\synthetic\\milestone2\\shared\\package.json",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cce",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 27,
+      "allocated_bytes": 32,
+      "modified_filetime": 134373262860668727,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a9",
+      "path": "C:\\synthetic\\milestone2\\web",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191cc6",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373262860655832,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a10",
+      "path": "C:\\synthetic\\milestone2\\web\\package.json",
+      "identity": "eef2c330f2c2fc39:00000000000000000002000000191ccd",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 67,
+      "allocated_bytes": 72,
+      "modified_filetime": 134373262860655832,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e0",
+      "artifact_id": "a1",
+      "observation": "Artifact registration claim for \"shared/build\"; owner Some(\"team-a\"); generation Some(\"declared-only command\"); revision None; holds [\"offline recovery\"]",
+      "source": "C:\\synthetic\\milestone2\\colossus.artifacts.json",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Registration is untrusted, unauthenticated evidence; never authorization or proof of reproducibility."
+      ]
+    },
+    {
+      "id": "e1",
+      "artifact_id": "a1",
+      "observation": "Artifact registration claim for \"shared/build\"; owner Some(\"team-b\"); generation None; revision None; holds []",
+      "source": "C:\\synthetic\\milestone2\\colossus.artifacts.json",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Registration is untrusted, unauthenticated evidence; never authorization or proof of reproducibility."
+      ]
+    },
+    {
+      "id": "e2",
+      "artifact_id": "a3",
+      "observation": "Parsed cargo manifest; declared project name Some(\"synthetic-rust\")",
+      "source": "C:\\synthetic\\milestone2\\rust\\Cargo.toml",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Manifest association is contextual evidence, not exclusive ownership or build provenance."
+      ]
+    },
+    {
+      "id": "e3",
+      "artifact_id": "a3",
+      "observation": "Declared local_dependency: \"../shared\"; inventoried_target_only",
+      "source": "C:\\synthetic\\milestone2\\rust\\Cargo.toml",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Declared relationship does not prove active use, completeness, ownership or recoverability."
+      ]
+    },
+    {
+      "id": "e4",
+      "artifact_id": "a8",
+      "observation": "Parsed npm manifest; declared project name Some(\"synthetic-shared\")",
+      "source": "C:\\synthetic\\milestone2\\shared\\package.json",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Manifest association is contextual evidence, not exclusive ownership or build provenance."
+      ]
+    },
+    {
+      "id": "e5",
+      "artifact_id": "a10",
+      "observation": "Parsed npm manifest; declared project name Some(\"synthetic-web\")",
+      "source": "C:\\synthetic\\milestone2\\web\\package.json",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Manifest association is contextual evidence, not exclusive ownership or build provenance."
+      ]
+    },
+    {
+      "id": "e6",
+      "artifact_id": "a10",
+      "observation": "Declared local_dependency: \"../shared\"; inventoried_target_only",
+      "source": "C:\\synthetic\\milestone2\\web\\package.json",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Declared relationship does not prove active use, completeness, ownership or recoverability."
+      ]
+    },
+    {
+      "id": "e7",
+      "artifact_id": "a6",
+      "observation": "SHA-256 6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d; 22 bytes read",
+      "source": "C:\\synthetic\\milestone2\\shared\\build\\one.bin",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Content equality does not establish disposability; point-in-time observation only."
+      ]
+    },
+    {
+      "id": "e8",
+      "artifact_id": "a7",
+      "observation": "SHA-256 6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d; 22 bytes read",
+      "source": "C:\\synthetic\\milestone2\\shared\\build\\two.bin",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Content equality does not establish disposability; point-in-time observation only."
+      ]
+    },
+    {
+      "id": "e9",
+      "artifact_id": "a5",
+      "observation": "Directory named build; sibling manifest exists at C:\\synthetic\\milestone2\\shared\\package.json",
+      "source": "filesystem metadata",
+      "timestamp_unix": 1792852687,
+      "collector_version": "0.2.0",
+      "limitations": [
+        "Name and manifest presence do not establish generated contents, ownership or disposability."
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "artifact_id": "a5",
+      "classification": "review_needed",
+      "proposed_operation": "investigate",
+      "evidence_ids": [
+        "e0",
+        "e1",
+        "e3",
+        "e4",
+        "e6",
+        "e9"
+      ],
+      "blockers": [
+        "contents may include source or unique assets",
+        "active dependencies and retention holds unresolved",
+        "recovery and generation method unverified",
+        "metadata-only inspection",
+        "ownership evidence: conflicting_claims",
+        "declared retention hold (unverified): offline recovery"
+      ],
+      "recovery_method": null,
+      "reconstruction_cost": null
+    }
+  ],
+  "repositories": [],
+  "provenance": {
+    "enabled": true,
+    "bytes_read": 451,
+    "projects": [
+      {
+        "id": "p0",
+        "root": "C:\\synthetic\\milestone2\\rust",
+        "manifest_artifact_id": "a3",
+        "ecosystem": "cargo",
+        "declared_name": "synthetic-rust",
+        "evidence_id": "e2"
+      },
+      {
+        "id": "p1",
+        "root": "C:\\synthetic\\milestone2\\shared",
+        "manifest_artifact_id": "a8",
+        "ecosystem": "npm",
+        "declared_name": "synthetic-shared",
+        "evidence_id": "e4"
+      },
+      {
+        "id": "p2",
+        "root": "C:\\synthetic\\milestone2\\web",
+        "manifest_artifact_id": "a10",
+        "ecosystem": "npm",
+        "declared_name": "synthetic-web",
+        "evidence_id": "e5"
+      }
+    ],
+    "dependencies": [
+      {
+        "project_id": "p0",
+        "declared_path": "../shared",
+        "relationship": "local_dependency",
+        "target_artifact_id": "a4",
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e3"
+      },
+      {
+        "project_id": "p2",
+        "declared_path": "../shared",
+        "relationship": "local_dependency",
+        "target_artifact_id": "a4",
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e6"
+      }
+    ],
+    "claims": [
+      {
+        "record_artifact_id": "a1",
+        "target_artifact_id": "a5",
+        "declared_path": "shared/build",
+        "declared_owner": "team-a",
+        "declared_generation_method": "declared-only command",
+        "declared_source_revision": null,
+        "retention_holds": [
+          "offline recovery"
+        ],
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e0"
+      },
+      {
+        "record_artifact_id": "a1",
+        "target_artifact_id": "a5",
+        "declared_path": "shared/build",
+        "declared_owner": "team-b",
+        "declared_generation_method": null,
+        "declared_source_revision": null,
+        "retention_holds": [],
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e1"
+      }
+    ],
+    "ownership": [
+      {
+        "artifact_id": "a0",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a1",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a2",
+        "project_ids": [
+          "p0"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e2"
+        ]
+      },
+      {
+        "artifact_id": "a3",
+        "project_ids": [
+          "p0"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e2"
+        ]
+      },
+      {
+        "artifact_id": "a4",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2"
+        ],
+        "declared_owners": [],
+        "status": "shared_context",
+        "evidence_ids": [
+          "e3",
+          "e4",
+          "e6"
+        ]
+      },
+      {
+        "artifact_id": "a5",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2"
+        ],
+        "declared_owners": [
+          "team-a",
+          "team-b"
+        ],
+        "status": "conflicting_claims",
+        "evidence_ids": [
+          "e0",
+          "e1",
+          "e3",
+          "e4",
+          "e6"
+        ]
+      },
+      {
+        "artifact_id": "a6",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2"
+        ],
+        "declared_owners": [
+          "team-a",
+          "team-b"
+        ],
+        "status": "conflicting_claims",
+        "evidence_ids": [
+          "e0",
+          "e1",
+          "e3",
+          "e4",
+          "e6"
+        ]
+      },
+      {
+        "artifact_id": "a7",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2"
+        ],
+        "declared_owners": [
+          "team-a",
+          "team-b"
+        ],
+        "status": "conflicting_claims",
+        "evidence_ids": [
+          "e0",
+          "e1",
+          "e3",
+          "e4",
+          "e6"
+        ]
+      },
+      {
+        "artifact_id": "a8",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2"
+        ],
+        "declared_owners": [],
+        "status": "shared_context",
+        "evidence_ids": [
+          "e3",
+          "e4",
+          "e6"
+        ]
+      },
+      {
+        "artifact_id": "a9",
+        "project_ids": [
+          "p2"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e5"
+        ]
+      },
+      {
+        "artifact_id": "a10",
+        "project_ids": [
+          "p2"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e5"
+        ]
+      }
+    ],
+    "hashes": [
+      {
+        "artifact_id": "a6",
+        "sha256": "6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d",
+        "bytes": 22,
+        "evidence_id": "e7"
+      },
+      {
+        "artifact_id": "a7",
+        "sha256": "6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d",
+        "bytes": 22,
+        "evidence_id": "e8"
+      }
+    ],
+    "duplicate_groups": [
+      [
+        "a6",
+        "a7"
+      ]
+    ],
+    "limitations": [
+      "Manifest and registry declarations are untrusted; no build, process use, exclusive ownership or recovery is verified.",
+      "Only Cargo/npm direct path declarations and literal workspace members are extracted; conditional, inherited, patched, remote and glob relationships are incomplete.",
+      "Hashes cover explicitly selected regular files only. Matching digests do not establish that either copy is unnecessary."
+    ]
+  },
+  "issues": [],
+  "totals": {
+    "logical_bytes": 451,
+    "allocated_known_bytes": 472,
+    "allocated_unknown_files": 0,
+    "unique_files": 6,
+    "hard_link_aliases": 0
+  },
+  "plan": {
+    "schema_version": "1.1.0",
+    "roots": [
+      "C:\\synthetic\\milestone2"
+    ],
+    "candidate_scope": [
+      "C:\\synthetic\\milestone2\\shared\\build"
+    ],
+    "protected_paths": [
+      "C:\\synthetic\\milestone2",
+      "C:\\synthetic\\milestone2\\colossus.artifacts.json",
+      "C:\\synthetic\\milestone2\\rust",
+      "C:\\synthetic\\milestone2\\rust\\Cargo.toml",
+      "C:\\synthetic\\milestone2\\shared",
+      "C:\\synthetic\\milestone2\\shared\\build",
+      "C:\\synthetic\\milestone2\\shared\\build\\one.bin",
+      "C:\\synthetic\\milestone2\\shared\\build\\two.bin",
+      "C:\\synthetic\\milestone2\\shared\\package.json",
+      "C:\\synthetic\\milestone2\\web",
+      "C:\\synthetic\\milestone2\\web\\package.json"
+    ],
+    "required_approval": "No executable operations. A future exact manifest requires separate approval.",
+    "manifest_digest": "sha256:f0332f2703d38252889bc20e48993c17a8f9fee8b3951eb8d6b2dcb16728a24e"
+  },
+  "limitations": [
+    "Windows local drives only; network shares, alternate data streams and directory allocation are excluded.",
+    "Not an atomic filesystem snapshot. Concurrent same-size writes with preserved timestamps can escape detection.",
+    "Open handles temporarily deny rename/deletion; scans can fail when other handles deny sharing.",
+    "No process-reference, exclusive ownership, executed-build provenance or recovery verification. Optional declarations and hashes remain evidence only.",
+    "File reads may affect access timestamps through OS policy; no source content, last-write time, Git or configuration writes are requested.",
+    "Allocated sizes are filesystem-reported per-file allocation, not promised reclaimable space; deduplication/compression/shared extents can differ.",
+    "Concurrency is bounded to one worker. Cancellation is checked between operations; a blocked filesystem call cannot be interrupted."
+  ]
+}

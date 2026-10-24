@@ -2,7 +2,7 @@
 
 An evidence-first developer-workspace auditor: a Rust CLI with a portable Codex/Claude skill. Phase 1 inventories explicitly selected roots and identifies questions worth investigating. It performs no cleanup.
 
-**Status:** experimental Windows-first Phase 1. Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [validation](docs/VALIDATION.md) for actual tests and measurements, and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** experimental Windows-first read-only milestone 2 (v0.2.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-2.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -12,6 +12,8 @@ With a Rust toolchain and a compatible Windows linker:
 cargo build --release --locked
 .\target\release\colossus.exe audit --root C:\dev\example --format text
 .\target\release\colossus.exe audit --root C:\dev\example --root D:\dev\other --format json --output C:\audit-reports\new-audit.json
+.\target\release\colossus.exe audit --root C:\dev\example --provenance --format json
+.\target\release\colossus.exe audit --root C:\dev\example --hash-file C:\dev\example\export-a.zip --hash-file C:\dev\example\export-b.zip --max-content-bytes 67108864
 ```
 
 The output parent must already exist outside the scan roots. Existing output files are never overwritten. Without `--output`, reports go to stdout; do not redirect stdout into a scanned root. Standard shell redirection is outside the CLI's protection boundary. A failed write can leave a partial **new** report; the command reports failure and never deletes it automatically.
@@ -20,13 +22,15 @@ Options: `--max-entries N` (default 1,000,000), `--max-depth N` (default 128, ma
 
 The scanner does not install packages, run build scripts, invoke Git, access the network or send telemetry. Repository configuration and README instructions are never executed. The build itself downloads normal Cargo dependencies when not cached.
 
+`--provenance` reads bounded Cargo/npm manifests and optional `colossus.artifacts.json` claim files. It reports project context, declared local/workspace dependencies, shared identities, conflicting owners and retention holds. `--hash-file` reads only exact selected inventoried files. Additional content reads are bounded to 64 MiB total by default, 1 MiB per manifest/record, and 32 MiB per selected file. Git metadata retains its separate 16 MiB per-file cap. Claims, checksums and equal hashes never authorize cleanup. See [evidence semantics and record format](docs/PROVENANCE.md).
+
 ## Skill
 
 The same [skill folder](skills/colossus/SKILL.md) works with Codex and Claude Code. Copy it to the appropriate personal skill directory (`~/.codex/skills/colossus` or `~/.claude/skills/colossus`) after building and placing the executable on PATH. The project does not alter agent configuration or install itself automatically.
 
 ## Reports and tests
 
-- [Versioned JSON schema](schemas/report-v1.schema.json): Artifact, Evidence, Candidate, Plan and reserved Receipt definitions.
+- [Current JSON schema](schemas/report-v1.1.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
 - [Architecture and security boundaries](docs/ARCHITECTURE.md).
 - [Validation and performance](docs/VALIDATION.md).
 - [Research and roadmap](docs/ROADMAP.md).
