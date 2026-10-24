@@ -1,0 +1,27 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "architecture": "AMD64",
+  "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+  "logical_cpus": 12,
+  "workload": {
+    "files": 10000,
+    "bytes_per_file": 1024,
+    "directories": 100
+  },
+  "source_preserved_content_and_mtime": true,
+  "complete": true,
+  "totals": {
+    "logical_bytes": 10240000,
+    "allocated_known_bytes": 40960000,
+    "allocated_unknown_files": 0,
+    "unique_files": 10000,
+    "hard_link_aliases": 0
+  },
+  "elapsed_seconds": 14.862310600001365,
+  "peak_working_set_bytes_sampled": 22839296,
+  "limitations": [
+    "Single local run; warm filesystem cache after preservation hashing; not an SSD throughput benchmark.",
+    "10ms peak-working-set sampling can miss brief peaks. No network or unsupported platforms measured.",
+    "Fixture retained in OS temp directory. No destructive cleanup performed."
+  ]
+}

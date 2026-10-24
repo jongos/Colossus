@@ -1,0 +1,192 @@
+{
+  "schema_version": "1.0.0",
+  "tool_version": "0.1.0",
+  "timestamp_unix": 1792851706,
+  "complete": true,
+  "cancelled": false,
+  "inventory_coverage": "metadata only",
+  "roots": [
+    "C:\\synthetic\\example"
+  ],
+  "root_identities": [
+    "eef2c330f2c2fc39:00000000000000000045000000125692"
+  ],
+  "artifacts": [
+    {
+      "id": "a0",
+      "path": "C:\\synthetic\\example",
+      "identity": "eef2c330f2c2fc39:00000000000000000045000000125692",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373251660560332,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a1",
+      "path": "C:\\synthetic\\example\\Cargo.toml",
+      "identity": "eef2c330f2c2fc39:000000000000000000090000001889be",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 58,
+      "allocated_bytes": 64,
+      "modified_filetime": 134373253061045594,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a2",
+      "path": "C:\\synthetic\\example\\src",
+      "identity": "eef2c330f2c2fc39:000000000000000000060000001889b1",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373251660560332,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a3",
+      "path": "C:\\synthetic\\example\\src\\main.rs",
+      "identity": "eef2c330f2c2fc39:0000000000000000000b000000188b82",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 14,
+      "allocated_bytes": 16,
+      "modified_filetime": 134373253061057452,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a4",
+      "path": "C:\\synthetic\\example\\target",
+      "identity": "eef2c330f2c2fc39:0000000000000000000b0000001684d8",
+      "kind": "directory",
+      "project_owner": null,
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373251660560332,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a5",
+      "path": "C:\\synthetic\\example\\target\\example.bin",
+      "identity": "eef2c330f2c2fc39:00000000000000000004000000188c3c",
+      "kind": "file",
+      "project_owner": null,
+      "logical_bytes": 4096,
+      "allocated_bytes": 4096,
+      "modified_filetime": 134373253061073354,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e0",
+      "artifact_id": "a4",
+      "observation": "Directory named target; sibling manifest exists at C:\\synthetic\\example\\Cargo.toml",
+      "source": "filesystem metadata",
+      "timestamp_unix": 1792851706,
+      "collector_version": "0.1.0",
+      "limitations": [
+        "Name and manifest presence do not establish generated contents, ownership or disposability."
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "artifact_id": "a4",
+      "classification": "review_needed",
+      "proposed_operation": "investigate",
+      "evidence_ids": [
+        "e0"
+      ],
+      "blockers": [
+        "contents may include source or unique assets",
+        "active dependencies and retention holds unresolved",
+        "recovery and generation method unverified",
+        "metadata-only inspection"
+      ],
+      "recovery_method": null,
+      "reconstruction_cost": null
+    }
+  ],
+  "repositories": [],
+  "issues": [],
+  "totals": {
+    "logical_bytes": 4168,
+    "allocated_known_bytes": 4176,
+    "allocated_unknown_files": 0,
+    "unique_files": 3,
+    "hard_link_aliases": 0
+  },
+  "plan": {
+    "schema_version": "1.0.0",
+    "roots": [
+      "C:\\synthetic\\example"
+    ],
+    "candidate_scope": [
+      "C:\\synthetic\\example\\target"
+    ],
+    "protected_paths": [
+      "C:\\synthetic\\example",
+      "C:\\synthetic\\example\\Cargo.toml",
+      "C:\\synthetic\\example\\src",
+      "C:\\synthetic\\example\\src\\main.rs",
+      "C:\\synthetic\\example\\target",
+      "C:\\synthetic\\example\\target\\example.bin"
+    ],
+    "required_approval": "No executable operations. A future exact manifest requires separate approval.",
+    "manifest_digest": "sha256:b57a4c39265d0e8bcd91234341c01aaba7aa8e7d584b0eb5fef81884325b422e"
+  },
+  "limitations": [
+    "Windows local drives only; network shares, alternate data streams and directory allocation are excluded.",
+    "Not an atomic filesystem snapshot. Concurrent same-size writes with preserved timestamps can escape detection.",
+    "Open handles temporarily deny rename/deletion; scans can fail when other handles deny sharing.",
+    "No process-reference, ownership, build provenance, content-duplicate or recovery verification. Dependencies and reconstruction costs are unknown.",
+    "File reads may affect access timestamps through OS policy; no source content, last-write time, Git or configuration writes are requested.",
+    "Allocated sizes are filesystem-reported per-file allocation, not promised reclaimable space; deduplication/compression/shared extents can differ.",
+    "Concurrency is bounded to one worker. Cancellation is checked between operations; a blocked filesystem call cannot be interrupted."
+  ]
+}
