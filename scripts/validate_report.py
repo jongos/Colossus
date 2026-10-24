@@ -28,6 +28,9 @@ def validate(report, schema):
         assert not report['complete']
     if 'provenance' in report:
         p=report['provenance']
+        selections={s['manifest_path'].replace('/','\\'):s['lockfile_path'] for s in p.get('cargo_lockfiles',[])}
+        assert len(selections)==len(p.get('cargo_lockfiles',[]))
+        if selections: assert p['enabled']
         projects={v['id']:v for v in p['projects']}
         assert len(projects)==len(p['projects'])
         for project in projects.values():
@@ -74,7 +77,7 @@ def validate(report, schema):
         statements={x['evidence_id']:x for x in p.get('statement_subjects',[])}
         for statement in statements.values():
             assert statement['statement_artifact_id'] in artifacts
-            if report['schema_version'] in ('1.4.0','1.5.0'):
+            if report['schema_version'] in ('1.4.0','1.5.0','1.6.0'):
                 assert statement['authentication']==auth[statement['statement_artifact_id']]['status']
             assert evidence[statement['evidence_id']]['artifact_id']==statement['statement_artifact_id']
             assert statement['target_artifact_id'] is None or statement['target_artifact_id'] in artifacts
@@ -85,7 +88,7 @@ def validate(report, schema):
             if kind=='statement_digest':
                 assert subject in statements
                 statement=statements[subject]
-                if report['schema_version'] in ('1.4.0','1.5.0'): assert auth[statement['statement_artifact_id']]['evidence_id'] in check['supporting_evidence_ids']
+                if report['schema_version'] in ('1.4.0','1.5.0','1.6.0'): assert auth[statement['statement_artifact_id']]['evidence_id'] in check['supporting_evidence_ids']
                 observed=hashes.get(statement['target_artifact_id'])
                 expected=statement['declared_sha256']
                 assert check['observed_value']==(observed['sha256'] if observed else None)
@@ -108,6 +111,8 @@ def validate(report, schema):
                 assert project['ecosystem']=='cargo'
                 if check['status']!='unresolved':
                     lock_path=project['root'].rstrip('\\/')+'\\Cargo.lock'
+                    manifest_path=artifacts[project['manifest_artifact_id']]['path'].replace('/','\\')
+                    lock_path=selections.get(manifest_path,lock_path)
                     fingerprints={h['evidence_id']:h for h in p.get('source_hashes',[])}
                     assert any(i in fingerprints and artifacts[fingerprints[i]['artifact_id']]['path'].replace('/','\\')==lock_path.replace('/','\\') for i in check['supporting_evidence_ids'])
                     expected_project=project
@@ -136,6 +141,6 @@ if __name__ == '__main__':
     ap.add_argument('--schema', type=Path)
     args = ap.parse_args()
     report=json.loads(args.report.read_text(encoding='utf-8'))
-    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json','1.4.0':'report-v1.4.schema.json','1.5.0':'report-v1.5.schema.json'}[report['schema_version']]
+    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json','1.4.0':'report-v1.4.schema.json','1.5.0':'report-v1.5.schema.json','1.6.0':'report-v1.6.schema.json'}[report['schema_version']]
     validate(report, json.loads(schema.read_text(encoding='utf-8')))
     print('Schema and cross-record invariants passed.')

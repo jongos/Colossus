@@ -1,6 +1,6 @@
 # Milestone 6: bounded Cargo lockfile evidence
 
-Milestone 5 is committed and public at [`ab1d59e`](https://github.com/jongos/Colossus/commit/ab1d59eb0696b339f853c62f87203a998e78db3c); remote main was verified to match. Milestone 6 is local v0.6.0 development, uncommitted and unpushed. The auditor remains read-only.
+Milestone 5 is committed and public at [`ab1d59e`](https://github.com/jongos/Colossus/commit/ab1d59eb0696b339f853c62f87203a998e78db3c); remote main was verified to match. Milestone 6 is published at [`358bf20`](https://github.com/jongos/Colossus/commit/358bf20655024a1166916fad1915f78e26c531d9), with remote main verified after push. The auditor remains read-only.
 
 ## Delivered
 
@@ -29,3 +29,5 @@ The published v0.5.0 skill is installed at `C:\Users\jongo\.codex\skills\colossu
 Installed binary SHA256: `c906fe29d0982a7d7ef67e4055bc573c838c8eb6e6b1643cc0fd97e75e12d425`.
 
 The local checkout's v0.6.0 binary is separate; the installed stable skill/executable remain v0.5.0. No production trust keys, scheduled scans, telemetry, cleanup or deletion capability were installed.
+
+The installed skill and executable were subsequently updated to published v0.6.0 while developing Milestone 7; the original v0.5.0 installation was preserved.

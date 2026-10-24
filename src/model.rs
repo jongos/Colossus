@@ -99,6 +99,7 @@ pub struct Report {
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Provenance {
+    pub cargo_lockfiles: Vec<CargoLockfileSelection>,
     pub trusted_keys: Vec<TrustedKey>,
     pub statement_authentications: Vec<StatementAuthentication>,
     pub statement_subjects: Vec<StatementSubject>,
@@ -197,4 +198,10 @@ pub struct StatementAuthentication {
     pub accepted_key_ids: Vec<String>,
     pub payload_sha256: String,
     pub evidence_id: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CargoLockfileSelection {
+    pub manifest_path: String,
+    pub lockfile_path: String,
 }

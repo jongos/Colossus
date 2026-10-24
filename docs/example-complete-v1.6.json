@@ -1,0 +1,1353 @@
+{
+  "schema_version": "1.6.0",
+  "tool_version": "0.7.0",
+  "timestamp_unix": 1792857346,
+  "complete": true,
+  "cancelled": false,
+  "inventory_coverage": "metadata plus explicitly requested bounded content evidence",
+  "roots": [
+    "C:\\synthetic\\milestone7"
+  ],
+  "root_identities": [
+    "eef2c330f2c2fc39:000000000000000000010000001b1d6a"
+  ],
+  "artifacts": [
+    {
+      "id": "a0",
+      "path": "C:\\synthetic\\milestone7",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d6a",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456373671,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a1",
+      "path": "C:\\synthetic\\milestone7\\.git",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d75",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456270325,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a2",
+      "path": "C:\\synthetic\\milestone7\\.git\\HEAD",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d78",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 22,
+      "allocated_bytes": 24,
+      "modified_filetime": 134373309456200584,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a3",
+      "path": "C:\\synthetic\\milestone7\\.git\\index",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d7a",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 32,
+      "allocated_bytes": 32,
+      "modified_filetime": 134373309456277524,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a4",
+      "path": "C:\\synthetic\\milestone7\\.git\\refs",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d76",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456186325,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a5",
+      "path": "C:\\synthetic\\milestone7\\.git\\refs\\heads",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d77",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456250970,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a6",
+      "path": "C:\\synthetic\\milestone7\\.git\\refs\\heads\\main",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d79",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 42,
+      "allocated_bytes": 48,
+      "modified_filetime": 134373309456250970,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a7",
+      "path": "C:\\synthetic\\milestone7\\colossus.artifacts.json",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d74",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 345,
+      "allocated_bytes": 352,
+      "modified_filetime": 134373309456292906,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a8",
+      "path": "C:\\synthetic\\milestone7\\rust",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d6b",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456313084,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a9",
+      "path": "C:\\synthetic\\milestone7\\rust\\Cargo.lock",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d7c",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 109,
+      "allocated_bytes": 112,
+      "modified_filetime": 134373309456333220,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a10",
+      "path": "C:\\synthetic\\milestone7\\rust\\Cargo.toml",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d6f",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 107,
+      "allocated_bytes": 112,
+      "modified_filetime": 134373309456022228,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a11",
+      "path": "C:\\synthetic\\milestone7\\shared",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d6d",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456313084,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a12",
+      "path": "C:\\synthetic\\milestone7\\shared\\Cargo.toml",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d7b",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 43,
+      "allocated_bytes": 48,
+      "modified_filetime": 134373309456313084,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a13",
+      "path": "C:\\synthetic\\milestone7\\shared\\build",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d6e",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456092882,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a14",
+      "path": "C:\\synthetic\\milestone7\\shared\\build\\one.bin",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d72",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 22,
+      "allocated_bytes": 24,
+      "modified_filetime": 134373309456086334,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a15",
+      "path": "C:\\synthetic\\milestone7\\shared\\build\\two.bin",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d73",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 22,
+      "allocated_bytes": 24,
+      "modified_filetime": 134373309456129005,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a16",
+      "path": "C:\\synthetic\\milestone7\\shared\\package.json",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d71",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 27,
+      "allocated_bytes": 32,
+      "modified_filetime": 134373309456063148,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a17",
+      "path": "C:\\synthetic\\milestone7\\statement.json",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d7d",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 963,
+      "allocated_bytes": 4096,
+      "modified_filetime": 134373309456373671,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a18",
+      "path": "C:\\synthetic\\milestone7\\web",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d6c",
+      "kind": "directory",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 0,
+      "allocated_bytes": null,
+      "modified_filetime": 134373309456022228,
+      "hard_links": 1,
+      "counted": false,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    },
+    {
+      "id": "a19",
+      "path": "C:\\synthetic\\milestone7\\web\\package.json",
+      "identity": "eef2c330f2c2fc39:000000000000000000010000001b1d70",
+      "kind": "file",
+      "project_owner": "C:\\synthetic\\milestone7",
+      "logical_bytes": 67,
+      "allocated_bytes": 72,
+      "modified_filetime": 134373309456022228,
+      "hard_links": 1,
+      "counted": true,
+      "originating_task": null,
+      "generation_method": null,
+      "dependencies": null,
+      "retention_holds": [
+        "ownership, dependency and recovery review required"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e0",
+      "artifact_id": "a7",
+      "observation": "Evidence source SHA-256 8c72136840f78176368297ebdb94d57ca759c39c03feaeec89d3a988d74288f1; 345 bytes",
+      "source": "C:\\synthetic\\milestone7\\colossus.artifacts.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e1",
+      "artifact_id": "a7",
+      "observation": "Artifact registration claim for \"shared/build\"; owner Some(\"team-a\"); generation Some(\"declared-only command\"); revision Some(\"1111111111111111111111111111111111111111\"); holds [\"offline recovery\"]",
+      "source": "C:\\synthetic\\milestone7\\colossus.artifacts.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Registration is untrusted, unauthenticated evidence; never authorization or proof of reproducibility."
+      ]
+    },
+    {
+      "id": "e2",
+      "artifact_id": "a7",
+      "observation": "Artifact registration claim for \"shared/build\"; owner Some(\"team-b\"); generation None; revision Some(\"2222222222222222222222222222222222222222\"); holds []",
+      "source": "C:\\synthetic\\milestone7\\colossus.artifacts.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Registration is untrusted, unauthenticated evidence; never authorization or proof of reproducibility."
+      ]
+    },
+    {
+      "id": "e3",
+      "artifact_id": "a10",
+      "observation": "Evidence source SHA-256 c4a68529cff0873b5cc726d37b809e5d9963acef54a0e0b44712b049258fafd1; 107 bytes",
+      "source": "C:\\synthetic\\milestone7\\rust\\Cargo.toml",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e4",
+      "artifact_id": "a10",
+      "observation": "Parsed cargo manifest; declared project name Some(\"synthetic-rust\")",
+      "source": "C:\\synthetic\\milestone7\\rust\\Cargo.toml",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Manifest association is contextual evidence, not exclusive ownership or build provenance."
+      ]
+    },
+    {
+      "id": "e5",
+      "artifact_id": "a10",
+      "observation": "Declared local_dependency: \"../shared\"; inventoried_target_only",
+      "source": "C:\\synthetic\\milestone7\\rust\\Cargo.toml",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Declared relationship does not prove active use, completeness, ownership or recoverability."
+      ]
+    },
+    {
+      "id": "e6",
+      "artifact_id": "a12",
+      "observation": "Evidence source SHA-256 f59a36f6c8357305503c8087fca0464bd9d702b0c5b4230e034228de2eb6dd07; 43 bytes",
+      "source": "C:\\synthetic\\milestone7\\shared\\Cargo.toml",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e7",
+      "artifact_id": "a12",
+      "observation": "Parsed cargo manifest; declared project name Some(\"shared\")",
+      "source": "C:\\synthetic\\milestone7\\shared\\Cargo.toml",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Manifest association is contextual evidence, not exclusive ownership or build provenance."
+      ]
+    },
+    {
+      "id": "e8",
+      "artifact_id": "a16",
+      "observation": "Evidence source SHA-256 dacac70c95fb99c4b286eaafbe815e9d01e7f2efed01864f7bd53346539a36ee; 27 bytes",
+      "source": "C:\\synthetic\\milestone7\\shared\\package.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e9",
+      "artifact_id": "a16",
+      "observation": "Parsed npm manifest; declared project name Some(\"synthetic-shared\")",
+      "source": "C:\\synthetic\\milestone7\\shared\\package.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Manifest association is contextual evidence, not exclusive ownership or build provenance."
+      ]
+    },
+    {
+      "id": "e10",
+      "artifact_id": "a19",
+      "observation": "Evidence source SHA-256 ce3d12cd64d3f4623b63e6564ba5d274b98b63c2edf49ed54ecb01b2224ad37a; 67 bytes",
+      "source": "C:\\synthetic\\milestone7\\web\\package.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e11",
+      "artifact_id": "a19",
+      "observation": "Parsed npm manifest; declared project name Some(\"synthetic-web\")",
+      "source": "C:\\synthetic\\milestone7\\web\\package.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Manifest association is contextual evidence, not exclusive ownership or build provenance."
+      ]
+    },
+    {
+      "id": "e12",
+      "artifact_id": "a19",
+      "observation": "Declared local_dependency: \"../shared\"; inventoried_target_only",
+      "source": "C:\\synthetic\\milestone7\\web\\package.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Declared relationship does not prove active use, completeness, ownership or recoverability."
+      ]
+    },
+    {
+      "id": "e13",
+      "artifact_id": "a14",
+      "observation": "SHA-256 6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d; 22 bytes read",
+      "source": "C:\\synthetic\\milestone7\\shared\\build\\one.bin",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Content equality does not establish disposability; point-in-time observation only."
+      ]
+    },
+    {
+      "id": "e14",
+      "artifact_id": "a15",
+      "observation": "SHA-256 6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d; 22 bytes read",
+      "source": "C:\\synthetic\\milestone7\\shared\\build\\two.bin",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Content equality does not establish disposability; point-in-time observation only."
+      ]
+    },
+    {
+      "id": "e15",
+      "artifact_id": "a2",
+      "observation": "Evidence source SHA-256 efece735f9e2c3a8cce5ddd1a32157e7fec60142deb50b0c263a43e0e0f563fe; 22 bytes",
+      "source": "C:\\synthetic\\milestone7\\.git\\HEAD",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e16",
+      "artifact_id": "a6",
+      "observation": "Evidence source SHA-256 b1fe15ec04700356ac0fd7414863e5534253174245eb0c96974c49837aecd502; 42 bytes",
+      "source": "C:\\synthetic\\milestone7\\.git\\refs\\heads\\main",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e17",
+      "artifact_id": "a9",
+      "observation": "Evidence source SHA-256 54d1fb3bbaf2d4ae46e7251358e9003b5bfb7100116dea5193c8ee8d803e6ae5; 109 bytes",
+      "source": "C:\\synthetic\\milestone7\\rust\\Cargo.lock",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e18",
+      "artifact_id": "a17",
+      "observation": "Evidence source SHA-256 66f296c9e1a0cd2f3ca5dba08fa587eb936bb14f34251d3c62a097207b8b8966; 963 bytes",
+      "source": "C:\\synthetic\\milestone7\\statement.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Fingerprint of observed bytes only; not authentication or a build attestation."
+      ]
+    },
+    {
+      "id": "e19",
+      "artifact_id": "a17",
+      "observation": "Statement authentication: verified_with_supplied_key; accepted caller labels [\"synthetic-test\"]; payload SHA256 58a96011f3b38626468ec781a978282fb2a06187c3910564245bd578418c17a0",
+      "source": "C:\\synthetic\\milestone7\\statement.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Caller-supplied public keys only; key ownership, revocation, freshness, predicate truth and build execution are not verified."
+      ]
+    },
+    {
+      "id": "e20",
+      "artifact_id": "a17",
+      "observation": "Statement subject \"shared/build/one.bin\"; claimed SHA256 Some(\"6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d\"); predicate type \"https://slsa.dev/provenance/v1\"",
+      "source": "C:\\synthetic\\milestone7\\statement.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Consult the separate authentication record. Predicate meaning, real-world signer identity and build execution remain unverified."
+      ]
+    },
+    {
+      "id": "e21",
+      "artifact_id": "a17",
+      "observation": "Statement subject \"shared/build/two.bin\"; claimed SHA256 Some(\"0000000000000000000000000000000000000000000000000000000000000000\"); predicate type \"https://slsa.dev/provenance/v1\"",
+      "source": "C:\\synthetic\\milestone7\\statement.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Consult the separate authentication record. Predicate meaning, real-world signer identity and build execution remain unverified."
+      ]
+    },
+    {
+      "id": "e22",
+      "artifact_id": "a17",
+      "observation": "Statement subject \"missing.bin\"; claimed SHA256 Some(\"1111111111111111111111111111111111111111111111111111111111111111\"); predicate type \"https://slsa.dev/provenance/v1\"",
+      "source": "C:\\synthetic\\milestone7\\statement.json",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Consult the separate authentication record. Predicate meaning, real-world signer identity and build execution remain unverified."
+      ]
+    },
+    {
+      "id": "e23",
+      "artifact_id": "a13",
+      "observation": "Directory named build; sibling manifest exists at C:\\synthetic\\milestone7\\shared\\Cargo.toml",
+      "source": "filesystem metadata",
+      "timestamp_unix": 1792857346,
+      "collector_version": "0.7.0",
+      "limitations": [
+        "Name and manifest presence do not establish generated contents, ownership or disposability."
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "artifact_id": "a13",
+      "classification": "review_needed",
+      "proposed_operation": "investigate",
+      "evidence_ids": [
+        "e1",
+        "e12",
+        "e13",
+        "e14",
+        "e15",
+        "e16",
+        "e17",
+        "e18",
+        "e19",
+        "e2",
+        "e20",
+        "e21",
+        "e23",
+        "e5",
+        "e7",
+        "e9"
+      ],
+      "blockers": [
+        "contents may include source or unique assets",
+        "active dependencies and retention holds unresolved",
+        "recovery and generation method unverified",
+        "read-only observations do not authorize mutation",
+        "ownership evidence: conflicting_claims",
+        "declared retention hold (unverified): offline recovery",
+        "statement_digest comparison: mismatch (subject e21)",
+        "source_revision comparison: mismatch (subject e2)",
+        "cargo_version_requirement comparison: mismatch (subject e5)",
+        "cargo_lock_dependency_version comparison: mismatch (subject e5)",
+        "cargo_lock_package_version comparison: mismatch (subject e7)"
+      ],
+      "recovery_method": null,
+      "reconstruction_cost": null
+    }
+  ],
+  "repositories": [
+    {
+      "path": "C:\\synthetic\\milestone7",
+      "kind": "repository",
+      "head": "ref: refs/heads/main",
+      "gitdir_claim": null,
+      "common_dir_claim": null,
+      "resolved_gitdir": "C:\\synthetic\\milestone7\\.git",
+      "resolved_common_dir": null,
+      "index_checksum": "sha1_consistent_not_authenticated",
+      "locked": null,
+      "index_entries": 0,
+      "possibly_modified": [],
+      "untracked": [
+        "colossus.artifacts.json",
+        "rust\\Cargo.lock",
+        "rust\\Cargo.toml",
+        "shared\\Cargo.toml",
+        "shared\\build\\one.bin",
+        "shared\\build\\two.bin",
+        "shared\\package.json",
+        "statement.json",
+        "web\\package.json"
+      ],
+      "limitations": [
+        "Metadata comparison only; content dirtiness, staged changes, ignored rules and HEAD/index equivalence are not verified.",
+        "Index checksum consistency is not authentication; repository metadata remains untrusted.",
+        "Untracked list includes ignored files; possibly_modified includes missing/uninspected paths and metadata-only differences."
+      ]
+    }
+  ],
+  "provenance": {
+    "cargo_lockfiles": [
+      {
+        "manifest_path": "C:\\synthetic\\milestone7\\shared\\Cargo.toml",
+        "lockfile_path": "C:\\synthetic\\milestone7\\rust\\Cargo.lock"
+      }
+    ],
+    "trusted_keys": [
+      {
+        "key_id": "synthetic-test",
+        "public_key_hex": "03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8"
+      }
+    ],
+    "statement_authentications": [
+      {
+        "statement_artifact_id": "a17",
+        "status": "verified_with_supplied_key",
+        "accepted_key_ids": [
+          "synthetic-test"
+        ],
+        "payload_sha256": "58a96011f3b38626468ec781a978282fb2a06187c3910564245bd578418c17a0",
+        "evidence_id": "e19"
+      }
+    ],
+    "statement_subjects": [
+      {
+        "statement_artifact_id": "a17",
+        "name": "shared/build/one.bin",
+        "declared_sha256": "6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d",
+        "predicate_type": "https://slsa.dev/provenance/v1",
+        "target_artifact_id": "a14",
+        "evidence_id": "e20",
+        "authentication": "verified_with_supplied_key"
+      },
+      {
+        "statement_artifact_id": "a17",
+        "name": "shared/build/two.bin",
+        "declared_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "predicate_type": "https://slsa.dev/provenance/v1",
+        "target_artifact_id": "a15",
+        "evidence_id": "e21",
+        "authentication": "verified_with_supplied_key"
+      },
+      {
+        "statement_artifact_id": "a17",
+        "name": "missing.bin",
+        "declared_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "predicate_type": "https://slsa.dev/provenance/v1",
+        "target_artifact_id": null,
+        "evidence_id": "e22",
+        "authentication": "verified_with_supplied_key"
+      }
+    ],
+    "source_hashes": [
+      {
+        "artifact_id": "a7",
+        "sha256": "8c72136840f78176368297ebdb94d57ca759c39c03feaeec89d3a988d74288f1",
+        "bytes": 345,
+        "evidence_id": "e0"
+      },
+      {
+        "artifact_id": "a10",
+        "sha256": "c4a68529cff0873b5cc726d37b809e5d9963acef54a0e0b44712b049258fafd1",
+        "bytes": 107,
+        "evidence_id": "e3"
+      },
+      {
+        "artifact_id": "a12",
+        "sha256": "f59a36f6c8357305503c8087fca0464bd9d702b0c5b4230e034228de2eb6dd07",
+        "bytes": 43,
+        "evidence_id": "e6"
+      },
+      {
+        "artifact_id": "a16",
+        "sha256": "dacac70c95fb99c4b286eaafbe815e9d01e7f2efed01864f7bd53346539a36ee",
+        "bytes": 27,
+        "evidence_id": "e8"
+      },
+      {
+        "artifact_id": "a19",
+        "sha256": "ce3d12cd64d3f4623b63e6564ba5d274b98b63c2edf49ed54ecb01b2224ad37a",
+        "bytes": 67,
+        "evidence_id": "e10"
+      },
+      {
+        "artifact_id": "a2",
+        "sha256": "efece735f9e2c3a8cce5ddd1a32157e7fec60142deb50b0c263a43e0e0f563fe",
+        "bytes": 22,
+        "evidence_id": "e15"
+      },
+      {
+        "artifact_id": "a6",
+        "sha256": "b1fe15ec04700356ac0fd7414863e5534253174245eb0c96974c49837aecd502",
+        "bytes": 42,
+        "evidence_id": "e16"
+      },
+      {
+        "artifact_id": "a9",
+        "sha256": "54d1fb3bbaf2d4ae46e7251358e9003b5bfb7100116dea5193c8ee8d803e6ae5",
+        "bytes": 109,
+        "evidence_id": "e17"
+      },
+      {
+        "artifact_id": "a17",
+        "sha256": "66f296c9e1a0cd2f3ca5dba08fa587eb936bb14f34251d3c62a097207b8b8966",
+        "bytes": 963,
+        "evidence_id": "e18"
+      }
+    ],
+    "checks": [
+      {
+        "kind": "cargo_package_name",
+        "subject_evidence_id": "e5",
+        "status": "consistent",
+        "observed_value": "shared",
+        "supporting_evidence_ids": [
+          "e7"
+        ],
+        "detail": "Compared declared Cargo package name (including package rename) with target manifest; active use remains unverified."
+      },
+      {
+        "kind": "cargo_version_requirement",
+        "subject_evidence_id": "e5",
+        "status": "mismatch",
+        "observed_value": "2.0.0",
+        "supporting_evidence_ids": [
+          "e7"
+        ],
+        "detail": "Compared an explicit Cargo requirement with the target's declared version using Cargo-style semver. Absent, invalid and inherited versions remain unresolved; features, lockfiles and build compatibility are unverified."
+      },
+      {
+        "kind": "dependency_manifest",
+        "subject_evidence_id": "e5",
+        "status": "consistent",
+        "observed_value": "p1",
+        "supporting_evidence_ids": [
+          "e7"
+        ],
+        "detail": "Target has a parsed manifest of the declaring ecosystem. This manifest-presence check alone does not verify name or version compatibility; consult separate Cargo checks where present. Features, lockfiles and active use remain unverified."
+      },
+      {
+        "kind": "dependency_manifest",
+        "subject_evidence_id": "e12",
+        "status": "consistent",
+        "observed_value": "p2",
+        "supporting_evidence_ids": [
+          "e9"
+        ],
+        "detail": "Target has a parsed manifest of the declaring ecosystem. This manifest-presence check alone does not verify name or version compatibility; consult separate Cargo checks where present. Features, lockfiles and active use remain unverified."
+      },
+      {
+        "kind": "source_revision",
+        "subject_evidence_id": "e1",
+        "status": "consistent",
+        "observed_value": "1111111111111111111111111111111111111111",
+        "supporting_evidence_ids": [
+          "e15",
+          "e16"
+        ],
+        "detail": "Compared with local HEAD metadata; object existence, signatures, build inputs and working-tree content are unverified."
+      },
+      {
+        "kind": "source_revision",
+        "subject_evidence_id": "e2",
+        "status": "mismatch",
+        "observed_value": "1111111111111111111111111111111111111111",
+        "supporting_evidence_ids": [
+          "e15",
+          "e16"
+        ],
+        "detail": "Compared with local HEAD metadata; object existence, signatures, build inputs and working-tree content are unverified."
+      },
+      {
+        "kind": "cargo_lock_package_version",
+        "subject_evidence_id": "e4",
+        "status": "consistent",
+        "observed_value": "0.1.0",
+        "supporting_evidence_ids": [
+          "e17"
+        ],
+        "detail": "Compared explicit manifest version to one source-less lockfile entry by name. This does not establish path identity, dependency resolution, checksums, features, active use or build compatibility."
+      },
+      {
+        "kind": "cargo_lock_dependency_version",
+        "subject_evidence_id": "e5",
+        "status": "mismatch",
+        "observed_value": "1.0.0",
+        "supporting_evidence_ids": [
+          "e17",
+          "e7"
+        ],
+        "detail": "Compared explicit manifest version to one source-less lockfile entry by name. This does not establish path identity, dependency resolution, checksums, features, active use or build compatibility."
+      },
+      {
+        "kind": "cargo_lock_package_version",
+        "subject_evidence_id": "e7",
+        "status": "mismatch",
+        "observed_value": "1.0.0",
+        "supporting_evidence_ids": [
+          "e17"
+        ],
+        "detail": "Compared explicit manifest version to one source-less lockfile entry by name. This does not establish path identity, dependency resolution, checksums, features, active use or build compatibility."
+      },
+      {
+        "kind": "statement_digest",
+        "subject_evidence_id": "e20",
+        "status": "consistent",
+        "observed_value": "6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d",
+        "supporting_evidence_ids": [
+          "e18",
+          "e19",
+          "e13"
+        ],
+        "detail": "Compares a statement claim with an explicitly selected target hash only. No target content is read implicitly. Unsupported names, absent SHA256 or missing selected hashes remain unresolved; a digest match alone is not signature verification, build proof or cleanup authority."
+      },
+      {
+        "kind": "statement_digest",
+        "subject_evidence_id": "e21",
+        "status": "mismatch",
+        "observed_value": "6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d",
+        "supporting_evidence_ids": [
+          "e18",
+          "e19",
+          "e14"
+        ],
+        "detail": "Compares a statement claim with an explicitly selected target hash only. No target content is read implicitly. Unsupported names, absent SHA256 or missing selected hashes remain unresolved; a digest match alone is not signature verification, build proof or cleanup authority."
+      },
+      {
+        "kind": "statement_digest",
+        "subject_evidence_id": "e22",
+        "status": "unresolved",
+        "observed_value": null,
+        "supporting_evidence_ids": [
+          "e18",
+          "e19"
+        ],
+        "detail": "Compares a statement claim with an explicitly selected target hash only. No target content is read implicitly. Unsupported names, absent SHA256 or missing selected hashes remain unresolved; a digest match alone is not signature verification, build proof or cleanup authority."
+      }
+    ],
+    "enabled": true,
+    "bytes_read": 1769,
+    "projects": [
+      {
+        "id": "p0",
+        "root": "C:\\synthetic\\milestone7\\rust",
+        "manifest_artifact_id": "a10",
+        "ecosystem": "cargo",
+        "declared_name": "synthetic-rust",
+        "declared_version": "0.1.0",
+        "evidence_id": "e4"
+      },
+      {
+        "id": "p1",
+        "root": "C:\\synthetic\\milestone7\\shared",
+        "manifest_artifact_id": "a12",
+        "ecosystem": "cargo",
+        "declared_name": "shared",
+        "declared_version": "2.0.0",
+        "evidence_id": "e7"
+      },
+      {
+        "id": "p2",
+        "root": "C:\\synthetic\\milestone7\\shared",
+        "manifest_artifact_id": "a16",
+        "ecosystem": "npm",
+        "declared_name": "synthetic-shared",
+        "declared_version": null,
+        "evidence_id": "e9"
+      },
+      {
+        "id": "p3",
+        "root": "C:\\synthetic\\milestone7\\web",
+        "manifest_artifact_id": "a19",
+        "ecosystem": "npm",
+        "declared_name": "synthetic-web",
+        "declared_version": null,
+        "evidence_id": "e11"
+      }
+    ],
+    "dependencies": [
+      {
+        "declared_package": "shared",
+        "declared_version_requirement": "^1",
+        "project_id": "p0",
+        "declared_path": "../shared",
+        "relationship": "local_dependency",
+        "target_artifact_id": "a11",
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e5"
+      },
+      {
+        "declared_package": null,
+        "declared_version_requirement": null,
+        "project_id": "p3",
+        "declared_path": "../shared",
+        "relationship": "local_dependency",
+        "target_artifact_id": "a11",
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e12"
+      }
+    ],
+    "claims": [
+      {
+        "record_artifact_id": "a7",
+        "target_artifact_id": "a13",
+        "declared_path": "shared/build",
+        "declared_owner": "team-a",
+        "declared_generation_method": "declared-only command",
+        "declared_source_revision": "1111111111111111111111111111111111111111",
+        "retention_holds": [
+          "offline recovery"
+        ],
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e1"
+      },
+      {
+        "record_artifact_id": "a7",
+        "target_artifact_id": "a13",
+        "declared_path": "shared/build",
+        "declared_owner": "team-b",
+        "declared_generation_method": null,
+        "declared_source_revision": "2222222222222222222222222222222222222222",
+        "retention_holds": [],
+        "resolution": "inventoried_target_only",
+        "evidence_id": "e2"
+      }
+    ],
+    "ownership": [
+      {
+        "artifact_id": "a0",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a1",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a2",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a3",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a4",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a5",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a6",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a7",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a8",
+        "project_ids": [
+          "p0"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e4"
+        ]
+      },
+      {
+        "artifact_id": "a9",
+        "project_ids": [
+          "p0"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e4"
+        ]
+      },
+      {
+        "artifact_id": "a10",
+        "project_ids": [
+          "p0"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e4"
+        ]
+      },
+      {
+        "artifact_id": "a11",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "declared_owners": [],
+        "status": "shared_context",
+        "evidence_ids": [
+          "e12",
+          "e5",
+          "e7",
+          "e9"
+        ]
+      },
+      {
+        "artifact_id": "a12",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "declared_owners": [],
+        "status": "shared_context",
+        "evidence_ids": [
+          "e12",
+          "e5",
+          "e7",
+          "e9"
+        ]
+      },
+      {
+        "artifact_id": "a13",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "declared_owners": [
+          "team-a",
+          "team-b"
+        ],
+        "status": "conflicting_claims",
+        "evidence_ids": [
+          "e1",
+          "e12",
+          "e2",
+          "e5",
+          "e7",
+          "e9"
+        ]
+      },
+      {
+        "artifact_id": "a14",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "declared_owners": [
+          "team-a",
+          "team-b"
+        ],
+        "status": "conflicting_claims",
+        "evidence_ids": [
+          "e1",
+          "e12",
+          "e2",
+          "e5",
+          "e7",
+          "e9"
+        ]
+      },
+      {
+        "artifact_id": "a15",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "declared_owners": [
+          "team-a",
+          "team-b"
+        ],
+        "status": "conflicting_claims",
+        "evidence_ids": [
+          "e1",
+          "e12",
+          "e2",
+          "e5",
+          "e7",
+          "e9"
+        ]
+      },
+      {
+        "artifact_id": "a16",
+        "project_ids": [
+          "p0",
+          "p1",
+          "p2",
+          "p3"
+        ],
+        "declared_owners": [],
+        "status": "shared_context",
+        "evidence_ids": [
+          "e12",
+          "e5",
+          "e7",
+          "e9"
+        ]
+      },
+      {
+        "artifact_id": "a17",
+        "project_ids": [],
+        "declared_owners": [],
+        "status": "unresolved",
+        "evidence_ids": []
+      },
+      {
+        "artifact_id": "a18",
+        "project_ids": [
+          "p3"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e11"
+        ]
+      },
+      {
+        "artifact_id": "a19",
+        "project_ids": [
+          "p3"
+        ],
+        "declared_owners": [],
+        "status": "context_only",
+        "evidence_ids": [
+          "e11"
+        ]
+      }
+    ],
+    "hashes": [
+      {
+        "artifact_id": "a14",
+        "sha256": "6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d",
+        "bytes": 22,
+        "evidence_id": "e13"
+      },
+      {
+        "artifact_id": "a15",
+        "sha256": "6f4d41fc979a063affe40ffda18b7577ac113ad8d29cf34403ac59197d7dbc7d",
+        "bytes": 22,
+        "evidence_id": "e14"
+      }
+    ],
+    "duplicate_groups": [
+      [
+        "a14",
+        "a15"
+      ]
+    ],
+    "limitations": [
+      "Manifest and registry declarations are untrusted; no build, process use, exclusive ownership or recovery is verified.",
+      "Only Cargo/npm direct path declarations and literal workspace members are extracted; conditional, inherited, patched, remote and glob relationships are incomplete.",
+      "Hashes cover explicitly selected regular files only. Matching digests do not establish that either copy is unnecessary."
+    ]
+  },
+  "issues": [],
+  "totals": {
+    "logical_bytes": 1801,
+    "allocated_known_bytes": 4976,
+    "allocated_unknown_files": 0,
+    "unique_files": 12,
+    "hard_link_aliases": 0
+  },
+  "plan": {
+    "schema_version": "1.6.0",
+    "roots": [
+      "C:\\synthetic\\milestone7"
+    ],
+    "candidate_scope": [
+      "C:\\synthetic\\milestone7\\shared\\build"
+    ],
+    "protected_paths": [
+      "C:\\synthetic\\milestone7",
+      "C:\\synthetic\\milestone7\\.git",
+      "C:\\synthetic\\milestone7\\.git\\HEAD",
+      "C:\\synthetic\\milestone7\\.git\\index",
+      "C:\\synthetic\\milestone7\\.git\\refs",
+      "C:\\synthetic\\milestone7\\.git\\refs\\heads",
+      "C:\\synthetic\\milestone7\\.git\\refs\\heads\\main",
+      "C:\\synthetic\\milestone7\\colossus.artifacts.json",
+      "C:\\synthetic\\milestone7\\rust",
+      "C:\\synthetic\\milestone7\\rust\\Cargo.lock",
+      "C:\\synthetic\\milestone7\\rust\\Cargo.toml",
+      "C:\\synthetic\\milestone7\\shared",
+      "C:\\synthetic\\milestone7\\shared\\Cargo.toml",
+      "C:\\synthetic\\milestone7\\shared\\build",
+      "C:\\synthetic\\milestone7\\shared\\build\\one.bin",
+      "C:\\synthetic\\milestone7\\shared\\build\\two.bin",
+      "C:\\synthetic\\milestone7\\shared\\package.json",
+      "C:\\synthetic\\milestone7\\statement.json",
+      "C:\\synthetic\\milestone7\\web",
+      "C:\\synthetic\\milestone7\\web\\package.json"
+    ],
+    "required_approval": "No executable operations. A future exact manifest requires separate approval.",
+    "manifest_digest": "sha256:915b07a69f73b8e31b4f40b808fc338e205ca7a5795d6c27d4462ae7f2e3d16e"
+  },
+  "limitations": [
+    "Windows local drives only; network shares, alternate data streams and directory allocation are excluded.",
+    "Not an atomic filesystem snapshot. Concurrent same-size writes with preserved timestamps can escape detection.",
+    "Open handles temporarily deny rename/deletion; scans can fail when other handles deny sharing.",
+    "No process-reference, exclusive ownership, executed-build provenance or recovery verification. Optional declarations and hashes remain evidence only.",
+    "File reads may affect access timestamps through OS policy; no source content, last-write time, Git or configuration writes are requested.",
+    "Allocated sizes are filesystem-reported per-file allocation, not promised reclaimable space; deduplication/compression/shared extents can differ.",
+    "Concurrency is bounded to one worker. Cancellation is checked between operations; a blocked filesystem call cannot be interrupted."
+  ]
+}

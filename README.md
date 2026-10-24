@@ -2,7 +2,7 @@
 
 An evidence-first developer-workspace auditor: a Rust CLI with a portable Codex/Claude skill. Phase 1 inventories explicitly selected roots and identifies questions worth investigating. It performs no cleanup.
 
-**Status:** experimental Windows-first read-only milestone 6 (v0.6.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-6.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** experimental Windows-first read-only milestone 7 (v0.7.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-7.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -30,7 +30,7 @@ The same [skill folder](skills/colossus/SKILL.md) works with Codex and Claude Co
 
 ## Reports and tests
 
-- [Current JSON schema](schemas/report-v1.5.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
+- [Current JSON schema](schemas/report-v1.6.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
 - [Architecture and security boundaries](docs/ARCHITECTURE.md).
 - [Validation and performance](docs/VALIDATION.md).
 - [Research and roadmap](docs/ROADMAP.md).
@@ -71,3 +71,7 @@ Replace `PUBLIC_KEY_HEX` with the independently approved 64-character Ed25519 pu
 ## Milestone 6
 
 With `--provenance`, bounded adjacent Cargo.lock v3/v4 observations compare explicit package versions and declared local dependency targets with source-less lock entries. No resolver or build is run. See [lockfile scope and limits](docs/LOCKFILES.md) and [Milestone 6 validation](docs/MILESTONE-6.md).
+
+## Milestone 7
+
+Select a shared lockfile explicitly with `--provenance --cargo-lockfile C:\dev\workspace\member\Cargo.toml C:\dev\workspace\Cargo.lock`. Both files must be inventoried in authorized roots. Repeat the pair for additional members. These caller-selected associations do not verify Cargo workspace membership or resolver behavior. See [selection rules](docs/LOCKFILES.md) and [Milestone 7 validation](docs/MILESTONE-7.md).

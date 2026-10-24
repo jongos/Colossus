@@ -20,7 +20,9 @@ Milestone 5 adds offline DSSE/Ed25519 verification with an explicit caller-suppl
 
 Milestone 6 adds bounded adjacent Cargo.lock v3/v4 declaration comparisons; workspace lockfile selection and resolution are not implemented.
 
-Next milestone: expand workspace lockfile association and dependency compatibility evidence, define authenticated predicate/build-context checks, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
+Milestone 7 adds explicit caller-selected manifest/lockfile associations within the authorized inventory; automatic workspace membership remains unsupported.
+
+Next milestone: validate declared workspace membership and dependency compatibility evidence, define authenticated predicate/build-context checks, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
 
 Later milestones, **plan only**:
 

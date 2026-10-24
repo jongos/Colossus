@@ -5,12 +5,13 @@ use crate::{
     provenance::{fingerprint, gap},
 };
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, BTreeSet},
     path::{Path, PathBuf},
 };
 
 const LIMIT: u64 = 1024 * 1024;
 const PACKAGES: usize = 10_000;
+#[derive(Clone)]
 struct Lock {
     local: BTreeMap<String, Vec<String>>,
 }
@@ -70,7 +71,7 @@ fn compare(
         return (
             "unresolved",
             None,
-            "No supported adjacent lockfile observation.",
+            "No supported selected or adjacent lockfile observation.",
         );
     };
     let (Some(name), Some(version)) = (name, version) else {
@@ -92,6 +93,42 @@ fn compare(
     let actual = semver::Version::parse(&entries[0]).expect("validated package version");
     (if actual==expected {"consistent"} else {"mismatch"}, Some(entries[0].clone()), "Compared explicit manifest version to one source-less lockfile entry by name. This does not establish path identity, dependency resolution, checksums, features, active use or build compatibility.")
 }
+pub fn validate_selections(
+    selections: &[CargoLockfileSelection],
+    enabled: bool,
+) -> Result<(), String> {
+    if !selections.is_empty() && !enabled {
+        return Err("Cargo lockfile selections require --provenance".into());
+    }
+    if selections.len() > 64 {
+        return Err("at most 64 Cargo lockfile selections are supported".into());
+    }
+    let mut seen = BTreeSet::new();
+    for s in selections {
+        if !seen.insert(PathBuf::from(&s.manifest_path)) {
+            return Err("duplicate manifest in Cargo lockfile selections".into());
+        }
+        for raw in [&s.manifest_path, &s.lockfile_path] {
+            if raw.len() > 32768
+                || !Path::new(raw).is_absolute()
+                || raw.starts_with("\\\\")
+                || raw.contains('\0')
+                || raw.contains('/') && raw.starts_with("//")
+            {
+                return Err(
+                    "Cargo lockfile selections require bounded absolute local Windows paths".into(),
+                );
+            }
+            if Path::new(raw)
+                .components()
+                .any(|c| matches!(c, std::path::Component::ParentDir))
+            {
+                return Err("parent traversal in Cargo lockfile selection is unsupported".into());
+            }
+        }
+    }
+    Ok(())
+}
 pub fn collect(
     r: &mut Report,
     artifacts: &BTreeMap<PathBuf, Artifact>,
@@ -112,13 +149,56 @@ pub fn collect(
     // Own the dependency lists so report evidence can be appended below.
     let deps: BTreeMap<String, Vec<Dependency>> =
         deps.into_iter().map(|(k, v)| (k.to_owned(), v)).collect();
+    let selections: BTreeMap<PathBuf, PathBuf> = r
+        .provenance
+        .cargo_lockfiles
+        .iter()
+        .map(|s| {
+            (
+                PathBuf::from(&s.manifest_path),
+                PathBuf::from(&s.lockfile_path),
+            )
+        })
+        .collect();
+    for manifest in selections.keys() {
+        if stop() {
+            return;
+        }
+        if !projects.iter().any(|p| {
+            p.ecosystem == "cargo"
+                && artifacts
+                    .get(manifest)
+                    .is_some_and(|a| a.kind == "file" && a.id == p.manifest_artifact_id)
+        }) {
+            gap(r,&manifest.to_string_lossy(),"Selected manifest is not an observed Cargo project; lockfile comparisons omitted rather than falling back.".into());
+            return;
+        }
+    }
+    let selected_paths: BTreeSet<_> = selections.values().cloned().collect();
+    // Only explicitly selected paths are cached: at most 64 files of at most 1 MiB.
+    let mut cache = BTreeMap::<PathBuf, (Option<Lock>, Vec<String>)>::new();
     for project in projects.iter().filter(|p| p.ecosystem == "cargo") {
         if stop() {
             return;
         }
-        let path = Path::new(&project.root).join("Cargo.lock");
+        let manifest = by_id[project.manifest_artifact_id.as_str()];
+        let selected = selections.get(&PathBuf::from(&manifest.path));
+        let path = selected
+            .cloned()
+            .unwrap_or_else(|| Path::new(&project.root).join("Cargo.lock"));
+        if selected.is_some() && !artifacts.contains_key(&path) {
+            gap(
+                r,
+                &path.to_string_lossy(),
+                "Selected lockfile is not in the authorized inventory; no adjacent fallback."
+                    .into(),
+            );
+        }
         let mut support = Vec::new();
-        let lock = if let Some(a) = artifacts.get(&path) {
+        let lock = if let Some((lock, ids)) = cache.get(&path) {
+            support = ids.clone();
+            lock.clone()
+        } else if let Some(a) = artifacts.get(&path) {
             if r.provenance.source_hashes.len() >= 10_000 {
                 gap(
                     r,
@@ -147,6 +227,9 @@ pub fn collect(
         } else {
             None
         };
+        if selected_paths.contains(&path) && !cache.contains_key(&path) {
+            cache.insert(path.clone(), (lock.clone(), support.clone()));
+        }
         if stop() {
             return;
         }
