@@ -63,6 +63,9 @@ pub fn human(r: &Report) -> String {
             hash.artifact_id, hash.sha256, hash.bytes, hash.evidence_id
         ));
     }
+    for subject in &r.provenance.statement_subjects {
+        s.push_str(&format!("Statement subject {:?}: claimed SHA256 {:?}; predicate {:?}; authentication {}; evidence {}\n", subject.name, subject.declared_sha256, subject.predicate_type, subject.authentication, subject.evidence_id));
+    }
     for check in &r.provenance.checks {
         s.push_str(&format!(
             "Check {} for {}: {}; observed {:?}; supporting {:?}; {:?}\n",

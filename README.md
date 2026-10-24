@@ -2,7 +2,7 @@
 
 An evidence-first developer-workspace auditor: a Rust CLI with a portable Codex/Claude skill. Phase 1 inventories explicitly selected roots and identifies questions worth investigating. It performs no cleanup.
 
-**Status:** experimental Windows-first read-only milestone 3 (v0.3.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-3.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** experimental Windows-first read-only milestone 4 (v0.4.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-4.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -30,7 +30,7 @@ The same [skill folder](skills/colossus/SKILL.md) works with Codex and Claude Co
 
 ## Reports and tests
 
-- [Current JSON schema](schemas/report-v1.2.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
+- [Current JSON schema](schemas/report-v1.3.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
 - [Architecture and security boundaries](docs/ARCHITECTURE.md).
 - [Validation and performance](docs/VALIDATION.md).
 - [Research and roadmap](docs/ROADMAP.md).
@@ -49,3 +49,11 @@ Public source is available for inspection. No redistribution license has been se
 ## Milestone 3
 
 Optional provenance collection now fingerprints observed evidence sources and compares local revision claims and dependency targets with bounded observations. Matching local values remain unauthenticated consistency evidence. See [Milestone 3 validation](docs/MILESTONE-3.md) and [comparison semantics](docs/CORROBORATION.md). The CLI remains read-only.
+
+## Milestone 4
+
+Cargo path dependencies now retain declared package names and version requirements and compare them with target manifests. Explicitly selected offline in-toto statements can be compared with selected file hashes. Neither capability verifies build execution or authenticated provenance. See [statement format and limits](docs/STATEMENTS.md) and [Milestone 4 validation](docs/MILESTONE-4.md).
+
+```powershell
+.\target\release\colossus.exe audit --root C:\dev\example --statement-file C:\dev\example\statement.json --hash-file C:\dev\example\build\output.bin --format json
+```

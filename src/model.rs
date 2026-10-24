@@ -99,6 +99,7 @@ pub struct Report {
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Provenance {
+    pub statement_subjects: Vec<StatementSubject>,
     pub source_hashes: Vec<ContentHash>,
     pub checks: Vec<ConsistencyCheck>,
     pub enabled: bool,
@@ -118,10 +119,13 @@ pub struct Project {
     pub manifest_artifact_id: String,
     pub ecosystem: String,
     pub declared_name: Option<String>,
+    pub declared_version: Option<String>,
     pub evidence_id: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Dependency {
+    pub declared_package: Option<String>,
+    pub declared_version_requirement: Option<String>,
     pub project_id: String,
     pub declared_path: String,
     pub relationship: String,
@@ -166,4 +170,15 @@ pub struct ConsistencyCheck {
     pub observed_value: Option<String>,
     pub supporting_evidence_ids: Vec<String>,
     pub detail: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StatementSubject {
+    pub statement_artifact_id: String,
+    pub name: String,
+    pub declared_sha256: Option<String>,
+    pub predicate_type: String,
+    pub target_artifact_id: Option<String>,
+    pub evidence_id: String,
+    pub authentication: String,
 }

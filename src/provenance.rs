@@ -58,7 +58,7 @@ pub(crate) fn evidence(
     });
     id
 }
-fn gap(r: &mut Report, path: &str, detail: String) {
+pub(crate) fn gap(r: &mut Report, path: &str, detail: String) {
     r.complete = false;
     r.issues.push(Issue {
         path: path.into(),
@@ -91,6 +91,7 @@ pub fn collect(
     r: &mut Report,
     enabled: bool,
     hash_paths: &[PathBuf],
+    statement_paths: &[PathBuf],
     max_bytes: u64,
     stop: &dyn Fn() -> bool,
 ) {
@@ -178,6 +179,11 @@ pub fn collect(
                 root: root.to_string_lossy().into_owned(),
                 manifest_artifact_id: a.id.clone(),
                 ecosystem: ecosystem.into(),
+                declared_version: bounded_name(if ecosystem == "cargo" {
+                    value.pointer("/package/version").and_then(Value::as_str)
+                } else {
+                    value.get("version").and_then(Value::as_str)
+                }),
                 declared_name,
                 evidence_id: eid,
             });
@@ -193,7 +199,7 @@ pub fn collect(
             };
             for section in sections {
                 if let Some(deps) = value.get(section).and_then(Value::as_object) {
-                    for spec in deps.values() {
+                    for (dep_name, spec) in deps {
                         if records_full(r) {
                             gap(r, &a.path, "provenance record budget reached".into());
                             break;
@@ -210,6 +216,17 @@ pub fn collect(
                         };
                         if let Some(claim) = claim {
                             dependency(r, &pid, a, root, claim, "local_dependency", &artifacts);
+                            if ecosystem == "cargo" {
+                                let dep = r.provenance.dependencies.last_mut().unwrap();
+                                dep.declared_package =
+                                    bounded_name(if spec.get("package").is_some() {
+                                        spec.get("package").and_then(Value::as_str)
+                                    } else {
+                                        Some(dep_name.as_str())
+                                    });
+                                dep.declared_version_requirement =
+                                    bounded_name(spec.get("version").and_then(Value::as_str));
+                            }
                         }
                     }
                 }
@@ -280,6 +297,11 @@ pub fn collect(
     if enabled {
         crate::corroboration::collect(r, &artifacts, &mut budget, stop);
     }
+    crate::statements::collect(r, &artifacts, statement_paths, &mut budget, stop);
+    if stop() {
+        r.cancelled = true;
+        r.complete = false;
+    }
     r.provenance.bytes_read = budget.read;
     if enabled {
         match ownership(r, &artifacts, stop) {
@@ -324,6 +346,8 @@ fn dependency(
     };
     let eid=evidence(r,a,format!("Declared {relationship}: {claim:?}; {resolution}"),&["Declared relationship does not prove active use, completeness, ownership or recoverability."]);
     r.provenance.dependencies.push(Dependency {
+        declared_package: None,
+        declared_version_requirement: None,
         project_id: pid.into(),
         declared_path: claim.into(),
         relationship: relationship.into(),
@@ -511,6 +535,50 @@ fn ownership(
 }
 
 pub fn attach_candidates(r: &mut Report) {
+    let paths: BTreeMap<_, _> = r
+        .artifacts
+        .iter()
+        .map(|a| (a.id.as_str(), PathBuf::from(&a.path)))
+        .collect();
+    let candidates: BTreeMap<_, _> = r
+        .candidates
+        .iter()
+        .map(|c| (paths[c.artifact_id.as_str()].clone(), c.artifact_id.clone()))
+        .collect();
+    let mut statement_links: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let mut links = 0usize;
+    let mut truncated = false;
+    'subjects: for subject in &r.provenance.statement_subjects {
+        let Some(target) = subject
+            .target_artifact_id
+            .as_deref()
+            .and_then(|id| paths.get(id))
+        else {
+            continue;
+        };
+        for parent in target.ancestors() {
+            if let Some(candidate) = candidates.get(parent) {
+                if links >= MAX_ASSOCIATIONS {
+                    truncated = true;
+                    break 'subjects;
+                }
+                statement_links
+                    .entry(candidate.clone())
+                    .or_default()
+                    .push(subject.evidence_id.clone());
+                links += 1;
+            }
+        }
+    }
+    if truncated {
+        gap(
+            r,
+            "",
+            "statement-to-candidate association budget exceeded; inspect statement checks directly"
+                .into(),
+        );
+    }
+
     let owners: BTreeMap<_, _> = r
         .provenance
         .ownership
@@ -523,13 +591,17 @@ pub fn attach_candidates(r: &mut Report) {
         .iter()
         .map(|c| (&c.evidence_id, c))
         .collect();
-    let checks: BTreeMap<_, _> = r
-        .provenance
-        .checks
-        .iter()
-        .map(|c| (&c.subject_evidence_id, c))
-        .collect();
+    let mut checks: BTreeMap<&String, Vec<&ConsistencyCheck>> = BTreeMap::new();
+    for check in &r.provenance.checks {
+        checks
+            .entry(&check.subject_evidence_id)
+            .or_default()
+            .push(check);
+    }
     for c in &mut r.candidates {
+        if let Some(ids) = statement_links.get(&c.artifact_id) {
+            c.evidence_ids.extend(ids.iter().cloned());
+        }
         if let Some(owner) = owners.get(&c.artifact_id) {
             c.evidence_ids.extend(owner.evidence_ids.clone());
             if matches!(
@@ -548,13 +620,15 @@ pub fn attach_candidates(r: &mut Report) {
         }
         let mut supporting = Vec::new();
         for id in &c.evidence_ids {
-            if let Some(check) = checks.get(id) {
-                supporting.extend(check.supporting_evidence_ids.iter().cloned());
-                if check.status != "consistent" {
-                    c.blockers.push(format!(
-                        "{} comparison: {} (subject {})",
-                        check.kind, check.status, check.subject_evidence_id
-                    ));
+            if let Some(items) = checks.get(id) {
+                for check in items {
+                    supporting.extend(check.supporting_evidence_ids.iter().cloned());
+                    if check.status != "consistent" {
+                        c.blockers.push(format!(
+                            "{} comparison: {} (subject {})",
+                            check.kind, check.status, check.subject_evidence_id
+                        ));
+                    }
                 }
             }
         }

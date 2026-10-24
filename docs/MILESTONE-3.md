@@ -1,6 +1,6 @@
 # Milestone 3: local provenance consistency
 
-Colossus 0.3.0 remains a read-only Windows auditor. Milestone 2 was committed and pushed to the public repository as [`738a8ba`](https://github.com/jongos/Colossus/commit/738a8ba9181aa5fa045596fc0e55c9ddedbede1a). Milestone 3 is a subsequent local development change, not yet committed or pushed.
+Colossus 0.3.0 remains a read-only Windows auditor. Milestone 2 was committed and pushed to the public repository as [`738a8ba`](https://github.com/jongos/Colossus/commit/738a8ba9181aa5fa045596fc0e55c9ddedbede1a). Milestone 3 was subsequently committed and pushed as `10f9964dd3d3003f9a82cdbc10775b5c7073824f`.
 
 ## Delivered
 

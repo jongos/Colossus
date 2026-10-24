@@ -29,3 +29,5 @@ This implementation follows the relevant structure of [Git repository layout](ht
 Reads use the same pinned-ancestor, identity/size/mtime checks and write-excluding content handles as explicit hashing. Cancellation emits no partial digest. Windows sharing does not guarantee a snapshot against every existing writable mapping or filesystem filter. Reading may update access metadata according to filesystem policy; preservation checks cover content and last-write time, not every filesystem attribute.
 
 The local suite exercises junction refs, substituted HEAD identities and content budgets using synthetic files. Dedicated-host mount, ReFS, mapped-drive and privilege-enabled symlink validation remains outstanding. No scanner operation writes to source trees, executes builds or changes repository state.
+
+Version 0.4.0 adds separate Cargo package-name and explicit-version checks; the original `dependency_manifest` result still has its narrow meaning. Version inheritance, npm ranges, features and lockfile resolution remain unsupported.

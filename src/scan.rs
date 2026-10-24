@@ -19,6 +19,7 @@ pub struct Options {
     pub progress: bool,
     pub provenance: bool,
     pub hash_files: Vec<PathBuf>,
+    pub statement_files: Vec<PathBuf>,
     pub max_content_bytes: u64,
 }
 impl Options {
@@ -32,6 +33,7 @@ impl Options {
             progress: false,
             provenance: false,
             hash_files: vec![],
+            statement_files: vec![],
             max_content_bytes: 64 * 1024 * 1024,
         }
     }
@@ -253,11 +255,11 @@ fn audit_observed(
         .map(|p| p.to_string_lossy().into_owned())
         .collect();
     let mut s = Scanner { options, seen: BTreeSet::new(), start: Instant::now(), bounded: false, report: Report {
-        schema_version:"1.2.0".into(),tool_version:env!("CARGO_PKG_VERSION").into(),timestamp_unix:now,
+        schema_version:"1.3.0".into(),tool_version:env!("CARGO_PKG_VERSION").into(),timestamp_unix:now,
         complete:true,cancelled:false,inventory_coverage:"metadata only".into(),roots:roots.clone(),root_identities:vec![],artifacts:vec![],evidence:vec![],candidates:vec![],repositories:vec![],issues:vec![],
         totals:Totals{logical_bytes:0,allocated_known_bytes:0,allocated_unknown_files:0,unique_files:0,hard_link_aliases:0},
         provenance:Provenance::default(),
-        plan:Plan{schema_version:"1.2.0".into(),roots,candidate_scope:vec![],protected_paths:vec![],required_approval:"No executable operations. A future exact manifest requires separate approval.".into(),manifest_digest:String::new()},
+        plan:Plan{schema_version:"1.3.0".into(),roots,candidate_scope:vec![],protected_paths:vec![],required_approval:"No executable operations. A future exact manifest requires separate approval.".into(),manifest_digest:String::new()},
         limitations: vec!["Windows local drives only; network shares, alternate data streams and directory allocation are excluded.".into(),
             "Not an atomic filesystem snapshot. Concurrent same-size writes with preserved timestamps can escape detection.".into(),
             "Open handles temporarily deny rename/deletion; scans can fail when other handles deny sharing.".into(),
@@ -307,13 +309,14 @@ fn audit_observed(
                     .is_some_and(|m| start.elapsed() >= Duration::from_millis(m))
         });
     }
-    if options.provenance || !options.hash_files.is_empty() {
+    if options.provenance || !options.hash_files.is_empty() || !options.statement_files.is_empty() {
         s.report.inventory_coverage =
             "metadata plus explicitly requested bounded content evidence".into();
         provenance::collect(
             &mut s.report,
             options.provenance,
             &options.hash_files,
+            &options.statement_files,
             options.max_content_bytes,
             &|| {
                 options.cancel.load(Ordering::Relaxed)

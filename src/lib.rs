@@ -6,4 +6,5 @@ pub mod platform;
 pub mod provenance;
 pub mod report;
 pub mod scan;
+pub mod statements;
 pub use scan::{audit, Options};

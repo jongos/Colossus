@@ -14,7 +14,9 @@ Milestone 2 published: bounded content hashes, declared provenance and ownership
 
 Milestone 3 adds local source fingerprints, revision consistency and dependency-manifest checks. These are not authenticated build attestations.
 
-Next milestone: add externally corroborated build evidence and version-aware dependency checks without executing builds, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
+Milestone 4 adds Cargo name/version comparisons and explicitly selected unsigned statement digest comparisons. Importing a statement does not authenticate it.
+
+Next milestone: define signer/trust policy and verify authenticated build statements, expand lockfile and dependency compatibility evidence, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
 
 Later milestones, **plan only**:
 

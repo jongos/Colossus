@@ -128,9 +128,40 @@ pub fn collect(
             .filter(|a| a.kind == "directory")
             .and_then(|a| by_root.get(&(PathBuf::from(&a.path), project.ecosystem.clone())));
         let (status, observed_value, supporting, detail) = match matched {
-            Some(p) => ("consistent", Some(p.id.clone()), vec![p.evidence_id.clone()], "Target has a parsed manifest of the declaring ecosystem. Package-name, version, feature, lockfile and active-use compatibility remain unverified."),
+            Some(p) => ("consistent", Some(p.id.clone()), vec![p.evidence_id.clone()], "Target has a parsed manifest of the declaring ecosystem. This manifest-presence check alone does not verify name or version compatibility; consult separate Cargo checks where present. Features, lockfiles and active use remain unverified."),
             None => ("unresolved", None, vec![], "No parsed manifest of the declaring ecosystem at this exact target directory; archives, unsupported declarations and missing targets remain unresolved."),
         };
+        if project.ecosystem == "cargo" && dep.relationship == "local_dependency" {
+            let target = matched.copied();
+            let name = target.and_then(|p| p.declared_name.clone());
+            let version = target.and_then(|p| p.declared_version.clone());
+            let supporting = target
+                .map(|p| vec![p.evidence_id.clone()])
+                .unwrap_or_default();
+            let name_status = match (&dep.declared_package, &name) {
+                (Some(a), Some(b)) if a == b => "consistent",
+                (Some(_), Some(_)) => "mismatch",
+                _ => "unresolved",
+            };
+            let version_status = match (
+                dep.declared_version_requirement
+                    .as_deref()
+                    .and_then(|s| semver::VersionReq::parse(s).ok()),
+                version
+                    .as_deref()
+                    .and_then(|s| semver::Version::parse(s).ok()),
+            ) {
+                (Some(req), Some(version)) if req.matches(&version) => "consistent",
+                (Some(_), Some(_)) => "mismatch",
+                _ => "unresolved",
+            };
+            for (kind, status, observed_value, detail) in [
+                ("cargo_package_name", name_status, name, "Compared declared Cargo package name (including package rename) with target manifest; active use remains unverified."),
+                ("cargo_version_requirement", version_status, version, "Compared an explicit Cargo requirement with the target's declared version using Cargo-style semver. Absent, invalid and inherited versions remain unresolved; features, lockfiles and build compatibility are unverified."),
+            ] {
+                r.provenance.checks.push(ConsistencyCheck {kind:kind.into(),subject_evidence_id:dep.evidence_id.clone(),status:status.into(),observed_value,supporting_evidence_ids:supporting.clone(),detail:detail.into()});
+            }
+        }
         r.provenance.checks.push(ConsistencyCheck {
             kind: "dependency_manifest".into(),
             subject_evidence_id: dep.evidence_id,

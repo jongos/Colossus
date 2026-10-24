@@ -59,12 +59,32 @@ def validate(report, schema):
             assert h['bytes']==artifacts[h['artifact_id']]['logical_bytes']
         subjects={x['evidence_id']: 'source_revision' for x in p['claims'] if x['declared_source_revision'] is not None}
         subjects.update({x['evidence_id']: 'dependency_manifest' for x in p['dependencies']})
+        statements={x['evidence_id']:x for x in p.get('statement_subjects',[])}
+        for statement in statements.values():
+            assert statement['statement_artifact_id'] in artifacts
+            assert evidence[statement['evidence_id']]['artifact_id']==statement['statement_artifact_id']
+            assert statement['target_artifact_id'] is None or statement['target_artifact_id'] in artifacts
         seen=set()
         for check in p.get('checks', []):
             subject=check['subject_evidence_id']
-            assert subjects[subject]==check['kind']
-            assert subject not in seen
-            seen.add(subject)
+            kind=check['kind']
+            if kind=='statement_digest':
+                assert subject in statements
+                statement=statements[subject]
+                observed=hashes.get(statement['target_artifact_id'])
+                expected=statement['declared_sha256']
+                assert check['observed_value']==(observed['sha256'] if observed else None)
+                expected_status=('consistent' if expected==observed['sha256'] else 'mismatch') if expected and observed else 'unresolved'
+                assert check['status']==expected_status
+                if observed:
+                    assert observed['evidence_id'] in check['supporting_evidence_ids']
+            elif kind in ('cargo_package_name','cargo_version_requirement'):
+                assert subjects[subject]=='dependency_manifest'
+            else:
+                assert subjects[subject]==kind
+            key=(subject,kind)
+            assert key not in seen
+            seen.add(key)
             assert all(i in evidence for i in check['supporting_evidence_ids'])
             if check['status'] != 'unresolved':
                 assert check['observed_value'] is not None
@@ -80,6 +100,6 @@ if __name__ == '__main__':
     ap.add_argument('--schema', type=Path)
     args = ap.parse_args()
     report=json.loads(args.report.read_text(encoding='utf-8'))
-    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json'}[report['schema_version']]
+    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json'}[report['schema_version']]
     validate(report, json.loads(schema.read_text(encoding='utf-8')))
     print('Schema and cross-record invariants passed.')
