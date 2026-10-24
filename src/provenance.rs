@@ -585,6 +585,12 @@ pub fn attach_candidates(r: &mut Report) {
         .iter()
         .map(|o| (&o.artifact_id, o))
         .collect();
+    let statement_subjects: BTreeMap<_, _> = r
+        .provenance
+        .statement_subjects
+        .iter()
+        .map(|s| (&s.evidence_id, s))
+        .collect();
     let claims: BTreeMap<_, _> = r
         .provenance
         .claims
@@ -620,6 +626,14 @@ pub fn attach_candidates(r: &mut Report) {
         }
         let mut supporting = Vec::new();
         for id in &c.evidence_ids {
+            if let Some(subject) = statement_subjects.get(id) {
+                if subject.authentication != "verified_with_supplied_key" {
+                    c.blockers.push(format!(
+                        "statement signature: {} (subject {})",
+                        subject.authentication, subject.evidence_id
+                    ));
+                }
+            }
             if let Some(items) = checks.get(id) {
                 for check in items {
                     supporting.extend(check.supporting_evidence_ids.iter().cloned());

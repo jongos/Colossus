@@ -21,7 +21,7 @@ fn run() -> Result<i32, String> {
             return Ok(0);
         }
         Some("--help") | None => {
-            println!("Colossus: read-only Windows developer-workspace auditor\nUsage: colossus audit --root ABSOLUTE_PATH [--root PATH ...] [--format json|text] [--output ABSOLUTE_NEW_FILE] [--max-entries N] [--max-depth N] [--deadline-ms N] [--quiet] [--provenance] [--hash-file ABSOLUTE_FILE ...] [--max-content-bytes N] [--statement-file ABSOLUTE_FILE ...]\nDefault: text to stdout; one worker; no links followed. Provenance is opt-in; hash files must be explicitly selected. Additional content budget defaults to 64 MiB (1 MiB/manifest, 32 MiB/hash file, 4 KiB/revision metadata, 1 MiB/statement; max 32 selected statements). Output parent must exist outside scan roots.\nExit: 0 complete within stated limits; 1 error; 2 incomplete; 130 cancelled. Ctrl-C requests a partial report.");
+            println!("Colossus: read-only Windows developer-workspace auditor\nUsage: colossus audit --root ABSOLUTE_PATH [--root PATH ...] [--format json|text] [--output ABSOLUTE_NEW_FILE] [--max-entries N] [--max-depth N] [--deadline-ms N] [--quiet] [--provenance] [--hash-file ABSOLUTE_FILE ...] [--max-content-bytes N] [--statement-file ABSOLUTE_FILE ...] [--trusted-key LABEL=ED25519_PUBLIC_HEX ...]\nDefault: text to stdout; one worker; no links followed. Provenance is opt-in; hash files must be explicitly selected. Additional content budget defaults to 64 MiB (1 MiB/manifest, 32 MiB/hash file, 4 KiB/revision metadata, 1 MiB/statement; max 32 selected statements). DSSE verification uses only explicitly supplied public keys; no key is trusted by default. Output parent must exist outside scan roots.\nExit: 0 complete within stated limits; 1 error; 2 incomplete; 130 cancelled. Ctrl-C requests a partial report.");
             return Ok(0);
         }
         Some("audit") => {}
@@ -49,6 +49,9 @@ fn run() -> Result<i32, String> {
             "--output" => output = Some(PathBuf::from(v)),
             "--hash-file" => options.hash_files.push(PathBuf::from(v)),
             "--statement-file" => options.statement_files.push(PathBuf::from(v)),
+            "--trusted-key" => options
+                .trusted_keys
+                .push(colossus_audit::authentication::parse_key(&v)?),
             "--max-content-bytes" => {
                 options.max_content_bytes = v.parse().map_err(|_| "invalid content byte budget")?
             }

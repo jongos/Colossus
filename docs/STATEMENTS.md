@@ -1,6 +1,6 @@
 # Offline statements and Cargo version checks
 
-Version 0.4.0 adds an explicit offline evidence adapter. The auditor does not fetch, sign, verify signatures, execute builds or evaluate predicate commands. No trust root, trusted-builder policy or authenticated provenance is established.
+Version 0.4.0 adds an explicit offline evidence adapter. The auditor does not fetch, sign, execute builds or evaluate predicate commands. Version 0.5.0 adds optional [DSSE signature verification](AUTHENTICATION.md) with explicitly supplied public keys. No trust root, trusted-builder policy or authenticated provenance is established.
 
 ## Select a statement and target
 
@@ -32,13 +32,13 @@ The example digest is SHA256 of the three bytes `abc`; it is not a build attesta
 
 This adapter treats supported subject names as relative file paths beneath the statement directory, using `/` separators. Absolute paths, URLs, `.`/`..` components, backslashes, stream syntax, junctions and targets absent from inventory cannot resolve. General in-toto subject names need not be filesystem paths; unsupported names remain unresolved rather than being guessed.
 
-Top-level fields are exactly `_type`, `subject`, `predicateType` and `predicate`. Subject fields are exactly `name` and `digest`; the only supported digest field is `sha256`. Unknown structural fields, signed envelopes, duplicate recognized fields, invalid digests and oversized records fail explicitly. Missing/null SHA256 remains unresolved. Extensions and other digest algorithms are unsupported. This is an intentionally narrower reader than a general in-toto verifier.
+Top-level fields are exactly `_type`, `subject`, `predicateType` and `predicate`. Subject fields are exactly `name` and `digest`; the only supported digest field is `sha256`. Unknown payload structural fields, unsupported envelopes, duplicate recognized fields, invalid digests and oversized records fail explicitly. Missing/null SHA256 remains unresolved. Extensions and other digest algorithms are unsupported. This is an intentionally narrower reader than a general in-toto verifier.
 
 ## Bounds and results
 
 At most 32 distinct selected statement paths are inspected, each at most 1 MiB, with at most 1,024 subjects per statement and 10,000 subjects per run. Names and predicate-type labels are limited to 4,096 bytes. Statement reads share the optional 64 MiB content budget with manifests, explicit hashes and revision checks. Ancestor pinning, regular-file checks, identity/size/time validation and cooperative cancellation apply. Failed reads or unsupported statement structures produce an incomplete report; unsupported subject resolution produces an unresolved check.
 
-`provenance.statement_subjects` retains the claimed name, SHA256, predicate type, statement artifact ID and resolved target ID when available. `authentication` is always `unverified`. Each `statement_digest` check cites subject evidence, the statement fingerprint and any explicitly observed target hash:
+`provenance.statement_subjects` retains the claimed name, SHA256, predicate type, statement artifact ID and resolved target ID when available. Raw statements have `authentication: unverified`; supported signed envelopes report the separate signature-verification result. Each `statement_digest` check cites subject evidence, the statement fingerprint and any explicitly observed target hash:
 
 - `consistent`: the claimed SHA256 equals the selected-file observation.
 - `mismatch`: the claimed SHA256 differs from that observation.

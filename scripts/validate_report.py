@@ -59,9 +59,23 @@ def validate(report, schema):
             assert h['bytes']==artifacts[h['artifact_id']]['logical_bytes']
         subjects={x['evidence_id']: 'source_revision' for x in p['claims'] if x['declared_source_revision'] is not None}
         subjects.update({x['evidence_id']: 'dependency_manifest' for x in p['dependencies']})
+        pins={x['key_id']:x for x in p.get('trusted_keys',[])}
+        assert len(pins)==len(p.get('trusted_keys',[]))
+        assert len({x['public_key_hex'].lower() for x in pins.values()})==len(pins)
+        auth={x['statement_artifact_id']:x for x in p.get('statement_authentications',[])}
+        assert len(auth)==len(p.get('statement_authentications',[]))
+        for a in auth.values():
+            assert a['statement_artifact_id'] in artifacts
+            assert evidence[a['evidence_id']]['artifact_id']==a['statement_artifact_id']
+            assert all(k in pins for k in a['accepted_key_ids'])
+            assert bool(a['accepted_key_ids'])==(a['status']=='verified_with_supplied_key')
+            if a['status']=='no_trusted_keys': assert not pins
+            if a['status']=='not_verified_with_supplied_keys': assert pins
         statements={x['evidence_id']:x for x in p.get('statement_subjects',[])}
         for statement in statements.values():
             assert statement['statement_artifact_id'] in artifacts
+            if report['schema_version']=='1.4.0':
+                assert statement['authentication']==auth[statement['statement_artifact_id']]['status']
             assert evidence[statement['evidence_id']]['artifact_id']==statement['statement_artifact_id']
             assert statement['target_artifact_id'] is None or statement['target_artifact_id'] in artifacts
         seen=set()
@@ -71,6 +85,7 @@ def validate(report, schema):
             if kind=='statement_digest':
                 assert subject in statements
                 statement=statements[subject]
+                if report['schema_version']=='1.4.0': assert auth[statement['statement_artifact_id']]['evidence_id'] in check['supporting_evidence_ids']
                 observed=hashes.get(statement['target_artifact_id'])
                 expected=statement['declared_sha256']
                 assert check['observed_value']==(observed['sha256'] if observed else None)
@@ -100,6 +115,6 @@ if __name__ == '__main__':
     ap.add_argument('--schema', type=Path)
     args = ap.parse_args()
     report=json.loads(args.report.read_text(encoding='utf-8'))
-    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json'}[report['schema_version']]
+    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json','1.4.0':'report-v1.4.schema.json'}[report['schema_version']]
     validate(report, json.loads(schema.read_text(encoding='utf-8')))
     print('Schema and cross-record invariants passed.')

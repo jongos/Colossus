@@ -1,3 +1,4 @@
+pub mod authentication;
 pub mod content;
 pub mod corroboration;
 pub mod git;

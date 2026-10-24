@@ -63,6 +63,10 @@ pub fn human(r: &Report) -> String {
             hash.artifact_id, hash.sha256, hash.bytes, hash.evidence_id
         ));
     }
+    s.push_str(&format!("Signature policy: any one of {} explicitly supplied Ed25519 public keys; no default trust\n",r.provenance.trusted_keys.len()));
+    for auth in &r.provenance.statement_authentications {
+        s.push_str(&format!("Statement authentication {}: {}; accepted caller key labels {:?}; payload SHA256 {}; evidence {}\n",auth.statement_artifact_id,auth.status,auth.accepted_key_ids,auth.payload_sha256,auth.evidence_id));
+    }
     for subject in &r.provenance.statement_subjects {
         s.push_str(&format!("Statement subject {:?}: claimed SHA256 {:?}; predicate {:?}; authentication {}; evidence {}\n", subject.name, subject.declared_sha256, subject.predicate_type, subject.authentication, subject.evidence_id));
     }

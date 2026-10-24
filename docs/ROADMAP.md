@@ -16,7 +16,9 @@ Milestone 3 adds local source fingerprints, revision consistency and dependency-
 
 Milestone 4 adds Cargo name/version comparisons and explicitly selected unsigned statement digest comparisons. Importing a statement does not authenticate it.
 
-Next milestone: define signer/trust policy and verify authenticated build statements, expand lockfile and dependency compatibility evidence, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
+Milestone 5 adds offline DSSE/Ed25519 verification with an explicit caller-supplied key policy. It does not establish real-world builder identity or predicate truth.
+
+Next milestone: expand lockfile and dependency compatibility evidence, define authenticated predicate/build-context checks, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
 
 Later milestones, **plan only**:
 

@@ -1,4 +1,4 @@
-//! Explicitly selected unsigned in-toto statement subjects; never trust predicates.
+//! Explicitly selected statement subjects; signature results do not verify predicates.
 use crate::{
     content::{self, Budget},
     model::*,
@@ -34,7 +34,7 @@ struct Digests {
 
 fn parse(bytes: &[u8]) -> Result<Statement, String> {
     let s: Statement = serde_json::from_slice(bytes).map_err(|_| {
-        "unsupported statement structure; expected the documented unsigned v1 subset"
+        "unsupported statement structure; expected the documented Statement v1 subset"
     })?;
     if s.kind != "https://in-toto.io/Statement/v1"
         || s.subject.is_empty()
@@ -99,7 +99,16 @@ pub fn collect(
             }
         };
         let source_id = fingerprint(r, a, &bytes);
-        let statement = match parse(&bytes) {
+        let decoded = match crate::authentication::inspect(&bytes, &r.provenance.trusted_keys, stop)
+        {
+            Ok(value) => value,
+            Err(e) => {
+                gap(r, &a.path, e);
+                continue;
+            }
+        };
+        // Parse the same decoded bytes whose DSSE signature was checked.
+        let statement = match parse(&decoded.payload) {
             Ok(s) => s,
             Err(e) => {
                 gap(r, &a.path, e);
@@ -114,6 +123,16 @@ pub fn collect(
             );
             break;
         }
+        let auth_eid=evidence(r,a,format!("Statement authentication: {}; accepted caller labels {:?}; payload SHA256 {}",decoded.status,decoded.accepted_key_ids,decoded.payload_sha256),&["Caller-supplied public keys only; key ownership, revocation, freshness, predicate truth and build execution are not verified."]);
+        r.provenance
+            .statement_authentications
+            .push(StatementAuthentication {
+                statement_artifact_id: a.id.clone(),
+                status: decoded.status.clone(),
+                accepted_key_ids: decoded.accepted_key_ids.clone(),
+                payload_sha256: decoded.payload_sha256.clone(),
+                evidence_id: auth_eid.clone(),
+            });
         for subject in statement.subject {
             if stop() {
                 return;
@@ -142,7 +161,7 @@ pub fn collect(
                 (Some(_), Some(_)) => "mismatch",
                 _ => "unresolved",
             };
-            let eid=evidence(r,a,format!("Unsigned statement subject {:?}; claimed SHA256 {:?}; predicate type {:?}",subject.name,digest,statement.predicate_type),&["No signature, signer identity, predicate meaning or build execution is verified."]);
+            let eid=evidence(r,a,format!("Statement subject {:?}; claimed SHA256 {:?}; predicate type {:?}",subject.name,digest,statement.predicate_type),&["Consult the separate authentication record. Predicate meaning, real-world signer identity and build execution remain unverified."]);
             r.provenance.statement_subjects.push(StatementSubject {
                 statement_artifact_id: a.id.clone(),
                 name: subject.name,
@@ -150,13 +169,13 @@ pub fn collect(
                 predicate_type: statement.predicate_type.clone(),
                 target_artifact_id: target.map(|a| a.id.clone()),
                 evidence_id: eid.clone(),
-                authentication: "unverified".into(),
+                authentication: decoded.status.clone(),
             });
-            let mut support = vec![source_id.clone()];
+            let mut support = vec![source_id.clone(), auth_eid.clone()];
             if let Some(h) = hash {
                 support.push(h.evidence_id.clone());
             }
-            r.provenance.checks.push(ConsistencyCheck {kind:"statement_digest".into(),subject_evidence_id:eid,status:status.into(),observed_value:hash.map(|h|h.sha256.clone()),supporting_evidence_ids:support,detail:"Compares an unsigned statement claim with an explicitly selected target hash only. No target content is read implicitly. Unsupported names, absent SHA256 or missing selected hashes remain unresolved; a match is not authenticated provenance or cleanup authority.".into()});
+            r.provenance.checks.push(ConsistencyCheck {kind:"statement_digest".into(),subject_evidence_id:eid,status:status.into(),observed_value:hash.map(|h|h.sha256.clone()),supporting_evidence_ids:support,detail:"Compares a statement claim with an explicitly selected target hash only. No target content is read implicitly. Unsupported names, absent SHA256 or missing selected hashes remain unresolved; a digest match alone is not signature verification, build proof or cleanup authority.".into()});
         }
     }
 }

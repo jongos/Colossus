@@ -99,6 +99,8 @@ pub struct Report {
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Provenance {
+    pub trusted_keys: Vec<TrustedKey>,
+    pub statement_authentications: Vec<StatementAuthentication>,
     pub statement_subjects: Vec<StatementSubject>,
     pub source_hashes: Vec<ContentHash>,
     pub checks: Vec<ConsistencyCheck>,
@@ -181,4 +183,18 @@ pub struct StatementSubject {
     pub target_artifact_id: Option<String>,
     pub evidence_id: String,
     pub authentication: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TrustedKey {
+    pub key_id: String,
+    pub public_key_hex: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StatementAuthentication {
+    pub statement_artifact_id: String,
+    pub status: String,
+    pub accepted_key_ids: Vec<String>,
+    pub payload_sha256: String,
+    pub evidence_id: String,
 }

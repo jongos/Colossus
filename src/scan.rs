@@ -20,6 +20,7 @@ pub struct Options {
     pub provenance: bool,
     pub hash_files: Vec<PathBuf>,
     pub statement_files: Vec<PathBuf>,
+    pub trusted_keys: Vec<TrustedKey>,
     pub max_content_bytes: u64,
 }
 impl Options {
@@ -34,6 +35,7 @@ impl Options {
             provenance: false,
             hash_files: vec![],
             statement_files: vec![],
+            trusted_keys: vec![],
             max_content_bytes: 64 * 1024 * 1024,
         }
     }
@@ -245,6 +247,10 @@ fn audit_observed(
     if options.roots.is_empty() || options.max_entries == 0 || options.max_depth > 256 {
         return Err("supply at least one root, a positive entry budget and depth <= 256".into());
     }
+    crate::authentication::validate_keys(&options.trusted_keys)?;
+    if !options.trusted_keys.is_empty() && options.statement_files.is_empty() {
+        return Err("trusted keys require explicitly selected statement files".into());
+    }
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map_err(|e| e.to_string())?
@@ -255,11 +261,11 @@ fn audit_observed(
         .map(|p| p.to_string_lossy().into_owned())
         .collect();
     let mut s = Scanner { options, seen: BTreeSet::new(), start: Instant::now(), bounded: false, report: Report {
-        schema_version:"1.3.0".into(),tool_version:env!("CARGO_PKG_VERSION").into(),timestamp_unix:now,
+        schema_version:"1.4.0".into(),tool_version:env!("CARGO_PKG_VERSION").into(),timestamp_unix:now,
         complete:true,cancelled:false,inventory_coverage:"metadata only".into(),roots:roots.clone(),root_identities:vec![],artifacts:vec![],evidence:vec![],candidates:vec![],repositories:vec![],issues:vec![],
         totals:Totals{logical_bytes:0,allocated_known_bytes:0,allocated_unknown_files:0,unique_files:0,hard_link_aliases:0},
         provenance:Provenance::default(),
-        plan:Plan{schema_version:"1.3.0".into(),roots,candidate_scope:vec![],protected_paths:vec![],required_approval:"No executable operations. A future exact manifest requires separate approval.".into(),manifest_digest:String::new()},
+        plan:Plan{schema_version:"1.4.0".into(),roots,candidate_scope:vec![],protected_paths:vec![],required_approval:"No executable operations. A future exact manifest requires separate approval.".into(),manifest_digest:String::new()},
         limitations: vec!["Windows local drives only; network shares, alternate data streams and directory allocation are excluded.".into(),
             "Not an atomic filesystem snapshot. Concurrent same-size writes with preserved timestamps can escape detection.".into(),
             "Open handles temporarily deny rename/deletion; scans can fail when other handles deny sharing.".into(),
@@ -267,6 +273,7 @@ fn audit_observed(
             "File reads may affect access timestamps through OS policy; no source content, last-write time, Git or configuration writes are requested.".into(),
             "Allocated sizes are filesystem-reported per-file allocation, not promised reclaimable space; deduplication/compression/shared extents can differ.".into(),
             "Concurrency is bounded to one worker. Cancellation is checked between operations; a blocked filesystem call cannot be interrupted.".into()] } };
+    s.report.provenance.trusted_keys = options.trusted_keys.clone();
     // Pin every accepted root for the entire audit, including bounded Git reads.
     let mut pinned = Vec::new();
     let mut root_ids = BTreeSet::new();

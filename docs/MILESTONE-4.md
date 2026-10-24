@@ -1,6 +1,6 @@
 # Milestone 4: dependency versions and offline statement evidence
 
-Milestone 3 is public at [`10f9964`](https://github.com/jongos/Colossus/commit/10f9964dd3d3003f9a82cdbc10775b5c7073824f), with remote main verified after push. Milestone 4 is local v0.4.0 development, not yet committed or pushed. The auditor remains read-only.
+Milestone 3 is public at [`10f9964`](https://github.com/jongos/Colossus/commit/10f9964dd3d3003f9a82cdbc10775b5c7073824f), with remote main verified after push. Milestone 4 was subsequently committed and pushed as `ed244d104b0f1d38253a6c4fb63cc228af9610ad`. The auditor remains read-only.
 
 ## Delivered
 
