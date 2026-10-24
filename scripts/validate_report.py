@@ -74,7 +74,7 @@ def validate(report, schema):
         statements={x['evidence_id']:x for x in p.get('statement_subjects',[])}
         for statement in statements.values():
             assert statement['statement_artifact_id'] in artifacts
-            if report['schema_version']=='1.4.0':
+            if report['schema_version'] in ('1.4.0','1.5.0'):
                 assert statement['authentication']==auth[statement['statement_artifact_id']]['status']
             assert evidence[statement['evidence_id']]['artifact_id']==statement['statement_artifact_id']
             assert statement['target_artifact_id'] is None or statement['target_artifact_id'] in artifacts
@@ -85,7 +85,7 @@ def validate(report, schema):
             if kind=='statement_digest':
                 assert subject in statements
                 statement=statements[subject]
-                if report['schema_version']=='1.4.0': assert auth[statement['statement_artifact_id']]['evidence_id'] in check['supporting_evidence_ids']
+                if report['schema_version'] in ('1.4.0','1.5.0'): assert auth[statement['statement_artifact_id']]['evidence_id'] in check['supporting_evidence_ids']
                 observed=hashes.get(statement['target_artifact_id'])
                 expected=statement['declared_sha256']
                 assert check['observed_value']==(observed['sha256'] if observed else None)
@@ -93,10 +93,31 @@ def validate(report, schema):
                 assert check['status']==expected_status
                 if observed:
                     assert observed['evidence_id'] in check['supporting_evidence_ids']
-            elif kind in ('cargo_package_name','cargo_version_requirement'):
+            elif kind=='cargo_lock_package_version':
+                assert subject in {x['evidence_id'] for x in projects.values() if x['ecosystem']=='cargo'}
+            elif kind in ('cargo_package_name','cargo_version_requirement','cargo_lock_dependency_version'):
                 assert subjects[subject]=='dependency_manifest'
             else:
                 assert subjects[subject]==kind
+            if kind in ('cargo_lock_package_version','cargo_lock_dependency_version'):
+                if kind=='cargo_lock_package_version':
+                    project=next(x for x in projects.values() if x['evidence_id']==subject)
+                else:
+                    dependency=next(x for x in p['dependencies'] if x['evidence_id']==subject)
+                    project=projects[dependency['project_id']]
+                assert project['ecosystem']=='cargo'
+                if check['status']!='unresolved':
+                    lock_path=project['root'].rstrip('\\/')+'\\Cargo.lock'
+                    fingerprints={h['evidence_id']:h for h in p.get('source_hashes',[])}
+                    assert any(i in fingerprints and artifacts[fingerprints[i]['artifact_id']]['path'].replace('/','\\')==lock_path.replace('/','\\') for i in check['supporting_evidence_ids'])
+                    expected_project=project
+                    if kind=='cargo_lock_dependency_version':
+                        target=artifacts[dependency['target_artifact_id']]['path']
+                        expected_project=next(x for x in projects.values() if x['root']==target and x['ecosystem']=='cargo')
+                        assert expected_project['evidence_id'] in check['supporting_evidence_ids']
+                        assert expected_project['declared_name']==dependency['declared_package']
+                    assert expected_project['declared_name'] and expected_project['declared_version']
+                    assert (check['observed_value']==expected_project['declared_version'])==(check['status']=='consistent')
             key=(subject,kind)
             assert key not in seen
             seen.add(key)
@@ -115,6 +136,6 @@ if __name__ == '__main__':
     ap.add_argument('--schema', type=Path)
     args = ap.parse_args()
     report=json.loads(args.report.read_text(encoding='utf-8'))
-    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json','1.4.0':'report-v1.4.schema.json'}[report['schema_version']]
+    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json','1.4.0':'report-v1.4.schema.json','1.5.0':'report-v1.5.schema.json'}[report['schema_version']]
     validate(report, json.loads(schema.read_text(encoding='utf-8')))
     print('Schema and cross-record invariants passed.')

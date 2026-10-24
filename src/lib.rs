@@ -9,3 +9,5 @@ pub mod report;
 pub mod scan;
 pub mod statements;
 pub use scan::{audit, Options};
+
+pub mod lockfiles;

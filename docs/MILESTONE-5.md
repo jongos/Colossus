@@ -1,6 +1,6 @@
 # Milestone 5: offline signature verification
 
-Milestone 4 is public at [`ed244d1`](https://github.com/jongos/Colossus/commit/ed244d104b0f1d38253a6c4fb63cc228af9610ad), with remote main verified after push. Milestone 5 is local v0.5.0 development, not yet committed or pushed. The auditor remains read-only.
+Milestone 4 is public at [`ed244d1`](https://github.com/jongos/Colossus/commit/ed244d104b0f1d38253a6c4fb63cc228af9610ad), with remote main verified after push. Milestone 5 is published as [`ab1d59e`](https://github.com/jongos/Colossus/commit/ab1d59eb0696b339f853c62f87203a998e78db3c), with remote main verified after push. The auditor remains read-only.
 
 ## Delivered
 

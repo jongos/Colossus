@@ -28,7 +28,7 @@ A directory named `target`, `build` or `dist` beside an inventoried build-manife
 
 Optional [provenance evidence](PROVENANCE.md) adds parsed manifest context, declared path relationships, unauthenticated artifact records, ownership conflicts and selected-file SHA-256 groups. It does not establish exclusive ownership, executed build provenance, recoverability or disposable duplicates. The original Artifact fields for verified generation/recovery remain unknown. No superseded-release reasoning, registry trust, process enumeration, cache pruning or eligibility-for-deletion classification is implemented. Empty/null fields mean unknown, never verified absent.
 
-The digest hashes the UTF-8 compact serde JSON report with `plan.manifest_digest` set to the empty string. It binds evidence and scope, but is not a signature or approval. Current report/Plan schema version is 1.4.0; the 1.0.0 through 1.3.0 schemas are retained for historical reports. Receipt remains reserved and no receipt is emitted. No executor, quarantine, restoration, pruning or watcher code exists.
+The digest hashes the UTF-8 compact serde JSON report with `plan.manifest_digest` set to the empty string. It binds evidence and scope, but is not a signature or approval. Current report/Plan schema version is 1.5.0; the 1.0.0 through 1.3.0 schemas are retained for historical reports. Receipt remains reserved and no receipt is emitted. No executor, quarantine, restoration, pruning or watcher code exists.
 
 ## Output boundary
 
@@ -39,3 +39,5 @@ Optional [local consistency checks](CORROBORATION.md) never elevate a candidate 
 `statements` reads only explicitly selected inventoried statement files, fingerprints their bytes and compares subject digests with explicit hashes. It never evaluates predicates; the separate `authentication` module verifies supported DSSE signatures only against caller-supplied keys. Cargo package-name and semver checks use already-read manifest fields. See [offline statement boundaries](STATEMENTS.md).
 
 Signature verification binds the exact DSSE payload bytes and payload type. The same decoded bytes are parsed as the statement. Public keys come only from the explicit options, are validated before inventory, and are recorded in the report. No keyring, certificate chain, URL, repository policy or default key supplies trust. See [authentication limits](AUTHENTICATION.md).
+
+`lockfiles` reads only adjacent inventoried Cargo.lock files under provenance collection, sharing the identity-checked content budget. It compares declarations without invoking a package manager. See [limits](LOCKFILES.md).

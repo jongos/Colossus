@@ -296,6 +296,7 @@ pub fn collect(
     }
     if enabled {
         crate::corroboration::collect(r, &artifacts, &mut budget, stop);
+        crate::lockfiles::collect(r, &artifacts, &mut budget, stop);
     }
     crate::statements::collect(r, &artifacts, statement_paths, &mut budget, stop);
     if stop() {

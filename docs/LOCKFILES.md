@@ -1,0 +1,16 @@
+# Cargo lockfile observations
+
+Milestone 6 adds two read-only consistency checks under `--provenance`, using existing inventory identity checks and the shared content-read budget. No package manager, build, network request or executable from the workspace runs.
+
+Only an inventoried `Cargo.lock` in the same directory as each observed Cargo manifest is considered. Parent/workspace lockfile selection is deliberately unsupported. Missing adjacent locks are unresolved evidence, not collection errors. A workspace member may therefore remain unresolved even if its workspace root has a lockfile.
+
+The parser supports explicit lockfile formats 3 and 4, at most 1 MiB per file and 10,000 package entries. It requires nonempty bounded names, semantic versions and correctly typed nonempty sources when present. Malformed TOML, duplicate fields, invalid package records, unsupported formats and read refusals produce coverage gaps. One malformed package invalidates comparisons from that lockfile; successful bounded reads still retain a source fingerprint. Extra fields, including dependency lists and checksums, are not interpreted or validated. Parsing is bounded but not interruptible inside the TOML parser; cancellation is checked before reading, during reads, between package records and between comparisons.
+
+- `cargo_lock_package_version`: subject is the Cargo project evidence; compares its explicit version with exactly one source-less lock entry of the same name.
+- `cargo_lock_dependency_version`: subject is a declared local dependency; first requires an inventoried target Cargo manifest whose name agrees with the dependency (including renames), then compares that target's explicit version with one source-less entry in the declaring project's adjacent lockfile. The requirement-versus-manifest check remains separate.
+
+A unique equal version is `consistent`; a unique unequal version is `mismatch`. Missing entries, multiple source-less entries (even identical duplicates), missing/invalid/inherited manifest versions, absent targets and target-name disagreements remain `unresolved`. Source-bearing entries never satisfy a local comparison. A same-name remote entry does not mask a unique source-less entry.
+
+These are comparisons of declarations. Source-less entries do not encode paths: even `consistent` does not prove that Cargo resolved this directory, selected this dependency edge, used these bytes, verified registry checksums, activated compatible features or produced a reproducible build. Dependency graphs, patches, Cargo configuration, alternate lockfile locations, workspace inheritance, npm lockfiles and full resolver semantics remain unsupported. See the official [Cargo manifest/lockfile distinction](https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html).
+
+Successful comparisons link the lockfile source fingerprint; dependency comparisons also link the target manifest evidence. Existing candidate propagation retains mismatch/unresolved blockers where associated, and every path remains protected. No match grants cleanup permission. Schema 1.5.0 adds the two check kinds; the report validator checks source/subject links and recorded-value consistency, not the original lockfile bytes or Cargo's resolver.

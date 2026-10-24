@@ -192,7 +192,7 @@ fn dependencies_require_same_ecosystem_manifest_at_exact_target() {
         r.provenance
             .checks
             .iter()
-            .filter(|c| c.status == "consistent")
+            .filter(|c| c.kind == "dependency_manifest" && c.status == "consistent")
             .count(),
         1
     );
@@ -200,7 +200,7 @@ fn dependencies_require_same_ecosystem_manifest_at_exact_target() {
         r.provenance
             .checks
             .iter()
-            .filter(|c| c.status == "unresolved")
+            .filter(|c| c.kind == "dependency_manifest" && c.status == "unresolved")
             .count(),
         3
     );
