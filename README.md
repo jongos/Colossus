@@ -4,6 +4,20 @@ An evidence-first developer-workspace auditor: a Rust CLI with a portable Codex/
 
 **Status:** experimental Windows-first read-only milestone 7 (v0.7.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-7.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
+## The Problem
+
+Developer folders take up disk space. Some of it is files a tool generated and could be rebuilt. Some of it is someone’s work.
+
+Before anyone cleans up, they need to know what is there, who owns it and whether it can be recovered.
+
+## What This Does About It
+
+Colossus is a program for Windows that only looks and never changes anything, plus a skill for AI agents (a folder of instructions you add to an agent). You choose which folders it may look at. It lists what is in them and raises questions worth checking, with the evidence behind each.
+
+It does not delete anything. It treats every candidate as protected and never says a file is safe to delete. It is experimental, and it only scans Windows so far.
+
+**Example.** `colossus audit --root C:\dev\example --format text` prints a text report on that one folder.
+
 ## Build and use
 
 With a Rust toolchain and a compatible Windows linker:
@@ -34,6 +48,7 @@ The same [skill folder](skills/colossus/SKILL.md) works with Codex and Claude Co
 - [Architecture and security boundaries](docs/ARCHITECTURE.md).
 - [Validation and performance](docs/VALIDATION.md).
 - [Research and roadmap](docs/ROADMAP.md).
+- [Landing page source](docs/index.html).
 
 ```powershell
 cargo test --locked
@@ -44,7 +59,7 @@ python scripts/benchmark.py --binary target/release/colossus.exe --output work/b
 
 Tests create synthetic disposable directories; they never use private projects. Fixture directories are retained in the OS temporary directory for inspection. Benchmarks and reports belong in ignored `work/`, `reports/` or a user-selected external location. No database is used.
 
-Public source is available for inspection. No redistribution license has been selected yet; publication alone does not grant an open-source license. No competitor implementation code is included.
+Original work is licensed under Apache-2.0; see [LICENSE](LICENSE). No competitor implementation code is included.
 
 ## Milestone 3
 
@@ -75,3 +90,22 @@ With `--provenance`, bounded adjacent Cargo.lock v3/v4 observations compare expl
 ## Milestone 7
 
 Select a shared lockfile explicitly with `--provenance --cargo-lockfile C:\dev\workspace\member\Cargo.toml C:\dev\workspace\Cargo.lock`. Both files must be inventoried in authorized roots. Repeat the pair for additional members. These caller-selected associations do not verify Cargo workspace membership or resolver behavior. See [selection rules](docs/LOCKFILES.md) and [Milestone 7 validation](docs/MILESTONE-7.md).
+
+## Part of the Hex Men Collection
+
+[Hex Men](https://github.com/jongos/Hex-Men) is a directory of independent projects by Jon Gosier. Each project stands on its own; these are its members.
+
+| Project | What It Does |
+|---|---|
+| [Hex Men](https://github.com/jongos/Hex-Men) | Directory of independent projects |
+| [Dazzler](https://github.com/jongos/Dazzler) | Create and refine expressive visual interfaces |
+| [Longshot](https://github.com/jongos/Longshot) | Independently test rendered UI tasks and provide replayable evidence |
+| [Style Science](https://github.com/jongos/style-science) | Provide inspectable design reasoning, constraints and evidence |
+| [Spiral](https://github.com/jongos/Spiral) | Rehearse role-limited asynchronous workflows before building |
+| [Shatterstar](https://github.com/jongos/Shatterstar) | Propose reversible evidence-backed simplification while preserving important tasks |
+| [Mojo](https://github.com/jongos/Mojo) | Remove repetition, needless nuance and overly cautious language from AI outputs |
+| **Colossus** (this repository) | Inventory selected developer workspaces read-only and surface evidence-backed questions |
+
+## License
+
+Created by Jon Gosier. Original work is Apache-2.0; Cargo dependencies retain their own licenses. See [LICENSE](LICENSE).

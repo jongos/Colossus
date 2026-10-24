@@ -1,0 +1,3 @@
+Copyright notices extracted verbatim from the bundled font name tables.
+
+Copyright (c) 2010, Caroline Hadilaksono &amp; Micah Rich <caroline@hadilaksono, micah@micahrich.com>, with Reserved Font Name: "League Gothic".
