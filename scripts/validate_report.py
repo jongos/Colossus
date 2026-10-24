@@ -53,6 +53,26 @@ def validate(report, schema):
             assert len({hashes[i]['sha256'] for i in group})==1
             assert len({artifacts[i]['identity'] for i in group})==len(group)
 
+        for h in p.get('source_hashes', []):
+            assert h['artifact_id'] in artifacts
+            assert evidence[h['evidence_id']]['artifact_id']==h['artifact_id']
+            assert h['bytes']==artifacts[h['artifact_id']]['logical_bytes']
+        subjects={x['evidence_id']: 'source_revision' for x in p['claims'] if x['declared_source_revision'] is not None}
+        subjects.update({x['evidence_id']: 'dependency_manifest' for x in p['dependencies']})
+        seen=set()
+        for check in p.get('checks', []):
+            subject=check['subject_evidence_id']
+            assert subjects[subject]==check['kind']
+            assert subject not in seen
+            seen.add(subject)
+            assert all(i in evidence for i in check['supporting_evidence_ids'])
+            if check['status'] != 'unresolved':
+                assert check['observed_value'] is not None
+                assert check['supporting_evidence_ids']
+            if check['kind']=='dependency_manifest':
+                assert check['status'] in ('consistent','unresolved')
+                assert check['observed_value'] is None or check['observed_value'] in projects
+
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
@@ -60,6 +80,6 @@ if __name__ == '__main__':
     ap.add_argument('--schema', type=Path)
     args = ap.parse_args()
     report=json.loads(args.report.read_text(encoding='utf-8'))
-    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json'}[report['schema_version']]
+    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json'}[report['schema_version']]
     validate(report, json.loads(schema.read_text(encoding='utf-8')))
     print('Schema and cross-record invariants passed.')

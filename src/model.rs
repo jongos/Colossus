@@ -99,6 +99,8 @@ pub struct Report {
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Provenance {
+    pub source_hashes: Vec<ContentHash>,
+    pub checks: Vec<ConsistencyCheck>,
     pub enabled: bool,
     pub bytes_read: u64,
     pub projects: Vec<Project>,
@@ -153,4 +155,15 @@ pub struct ContentHash {
     pub sha256: String,
     pub bytes: u64,
     pub evidence_id: String,
+}
+
+/// A comparison of local observations, never authentication or build verification.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ConsistencyCheck {
+    pub kind: String,
+    pub subject_evidence_id: String,
+    pub status: String,
+    pub observed_value: Option<String>,
+    pub supporting_evidence_ids: Vec<String>,
+    pub detail: String,
 }

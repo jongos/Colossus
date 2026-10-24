@@ -43,6 +43,8 @@ Colossus reads this format; it does not create or modify a registry. Save record
 }
 ```
 
-The command string is retained as a claim and never executed. Paths are resolved from the record file's parent against inventoried entries only. See [record schema](../schemas/artifact-records-v1.schema.json) and [report schema](../schemas/report-v1.1.schema.json).
+The command string is retained as a claim and never executed. Paths are resolved from the record file's parent against inventoried entries only. See [record schema](../schemas/artifact-records-v1.schema.json) and [report schema](../schemas/report-v1.2.schema.json).
 
 Primary references checked for this implementation: [Cargo dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html), [npm package metadata](https://docs.npmjs.com/cli/v11/configuring-npm/package-json/), [Git index format](https://git-scm.com/docs/gitformat-index), [Windows sharing rules](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew), [Windows filename rules](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file), and [drive types](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdrivetypew).
+
+Milestone 3 adds [source fingerprints and local consistency checks](CORROBORATION.md). HEAD and supported loose branch-ref reads share the optional content budget and have a 4 KiB per-file limit. Historical reports do not contain these fields.

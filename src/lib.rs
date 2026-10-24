@@ -1,4 +1,5 @@
 pub mod content;
+pub mod corroboration;
 pub mod git;
 pub mod model;
 pub mod platform;

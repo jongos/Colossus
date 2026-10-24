@@ -63,6 +63,21 @@ pub fn human(r: &Report) -> String {
             hash.artifact_id, hash.sha256, hash.bytes, hash.evidence_id
         ));
     }
+    for check in &r.provenance.checks {
+        s.push_str(&format!(
+            "Check {} for {}: {}; observed {:?}; supporting {:?}; {:?}\n",
+            check.kind,
+            check.subject_evidence_id,
+            check.status,
+            check.observed_value,
+            check.supporting_evidence_ids,
+            check.detail
+        ));
+    }
+    s.push_str(&format!(
+        "Evidence-source fingerprints: {} (not authentication)\n",
+        r.provenance.source_hashes.len()
+    ));
     for limitation in &r.provenance.limitations {
         s.push_str(&format!("- {limitation}\n"));
     }

@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.2.0",
+  "tool_version": "0.3.0",
+  "timestamp_unix": 1792853830,
+  "complete": false,
+  "cancelled": true,
+  "inventory_coverage": "metadata plus explicitly requested bounded content evidence",
+  "roots": [
+    "C:\\synthetic\\milestone3"
+  ],
+  "root_identities": [
+    "eef2c330f2c2fc39:0000000000000000002600000019caf1"
+  ],
+  "artifacts": [],
+  "evidence": [],
+  "candidates": [],
+  "repositories": [],
+  "provenance": {
+    "source_hashes": [],
+    "checks": [],
+    "enabled": true,
+    "bytes_read": 0,
+    "projects": [],
+    "dependencies": [],
+    "claims": [],
+    "ownership": [],
+    "hashes": [],
+    "duplicate_groups": [],
+    "limitations": [
+      "Manifest and registry declarations are untrusted; no build, process use, exclusive ownership or recovery is verified.",
+      "Only Cargo/npm direct path declarations and literal workspace members are extracted; conditional, inherited, patched, remote and glob relationships are incomplete.",
+      "Hashes cover explicitly selected regular files only. Matching digests do not establish that either copy is unnecessary."
+    ]
+  },
+  "issues": [
+    {
+      "path": "",
+      "code": "cancelled",
+      "detail": "audit interrupted; results are partial"
+    },
+    {
+      "path": "",
+      "code": "provenance_gap",
+      "detail": "cancelled before ownership association"
+    }
+  ],
+  "totals": {
+    "logical_bytes": 0,
+    "allocated_known_bytes": 0,
+    "allocated_unknown_files": 0,
+    "unique_files": 0,
+    "hard_link_aliases": 0
+  },
+  "plan": {
+    "schema_version": "1.2.0",
+    "roots": [
+      "C:\\synthetic\\milestone3"
+    ],
+    "candidate_scope": [],
+    "protected_paths": [],
+    "required_approval": "No executable operations. A future exact manifest requires separate approval.",
+    "manifest_digest": "sha256:57650fd81e488e676b668821b550fb767caf93666dfed017265598fc6c7c94a4"
+  },
+  "limitations": [
+    "Windows local drives only; network shares, alternate data streams and directory allocation are excluded.",
+    "Not an atomic filesystem snapshot. Concurrent same-size writes with preserved timestamps can escape detection.",
+    "Open handles temporarily deny rename/deletion; scans can fail when other handles deny sharing.",
+    "No process-reference, exclusive ownership, executed-build provenance or recovery verification. Optional declarations and hashes remain evidence only.",
+    "File reads may affect access timestamps through OS policy; no source content, last-write time, Git or configuration writes are requested.",
+    "Allocated sizes are filesystem-reported per-file allocation, not promised reclaimable space; deduplication/compression/shared extents can differ.",
+    "Concurrency is bounded to one worker. Cancellation is checked between operations; a blocked filesystem call cannot be interrupted."
+  ]
+}

@@ -5,6 +5,7 @@ use crate::{
 };
 use serde::Deserialize;
 use serde_json::Value;
+use sha2::{Digest, Sha256};
 use std::{
     collections::{BTreeMap, BTreeSet},
     path::{Path, PathBuf},
@@ -39,7 +40,12 @@ fn charge(entry: &Associations, links: &mut usize, bytes: &mut usize) -> Result<
     Ok(())
 }
 
-fn evidence(r: &mut Report, a: &Artifact, observation: String, limitations: &[&str]) -> String {
+pub(crate) fn evidence(
+    r: &mut Report,
+    a: &Artifact,
+    observation: String,
+    limitations: &[&str],
+) -> String {
     let id = format!("e{}", r.evidence.len());
     r.evidence.push(Evidence {
         id: id.clone(),
@@ -100,8 +106,12 @@ pub fn collect(
     let mut budget = Budget::new(max_bytes);
     if enabled {
         for (path, a) in &artifacts {
-            if records_full(r) {
-                gap(r, "", "provenance record budget reached".into());
+            if records_full(r) || r.provenance.source_hashes.len() >= MAX_RECORDS {
+                gap(
+                    r,
+                    "",
+                    "provenance record or source fingerprint budget reached".into(),
+                );
                 break;
             }
             if stop() {
@@ -126,6 +136,7 @@ pub fn collect(
                     continue;
                 }
             };
+            fingerprint(r, a, &bytes);
             if name == "colossus.artifacts.json" {
                 match registry(r, a, &bytes, &artifacts, stop) {
                     Ok(()) => {}
@@ -265,6 +276,9 @@ pub fn collect(
             }
             Err(e) => gap(r, &a.path, e),
         }
+    }
+    if enabled {
+        crate::corroboration::collect(r, &artifacts, &mut budget, stop);
     }
     r.provenance.bytes_read = budget.read;
     if enabled {
@@ -509,6 +523,12 @@ pub fn attach_candidates(r: &mut Report) {
         .iter()
         .map(|c| (&c.evidence_id, c))
         .collect();
+    let checks: BTreeMap<_, _> = r
+        .provenance
+        .checks
+        .iter()
+        .map(|c| (&c.subject_evidence_id, c))
+        .collect();
     for c in &mut r.candidates {
         if let Some(owner) = owners.get(&c.artifact_id) {
             c.evidence_ids.extend(owner.evidence_ids.clone());
@@ -526,7 +546,37 @@ pub fn attach_candidates(r: &mut Report) {
                     .push(format!("declared retention hold (unverified): {hold}"));
             }
         }
+        let mut supporting = Vec::new();
+        for id in &c.evidence_ids {
+            if let Some(check) = checks.get(id) {
+                supporting.extend(check.supporting_evidence_ids.iter().cloned());
+                if check.status != "consistent" {
+                    c.blockers.push(format!(
+                        "{} comparison: {} (subject {})",
+                        check.kind, check.status, check.subject_evidence_id
+                    ));
+                }
+            }
+        }
+        c.evidence_ids.extend(supporting);
         c.evidence_ids.sort();
         c.evidence_ids.dedup();
     }
+}
+
+pub(crate) fn fingerprint(r: &mut Report, a: &Artifact, bytes: &[u8]) -> String {
+    let sha256 = format!("{:x}", Sha256::digest(bytes));
+    let eid = evidence(
+        r,
+        a,
+        format!("Evidence source SHA-256 {sha256}; {} bytes", bytes.len()),
+        &["Fingerprint of observed bytes only; not authentication or a build attestation."],
+    );
+    r.provenance.source_hashes.push(ContentHash {
+        artifact_id: a.id.clone(),
+        sha256,
+        bytes: bytes.len() as u64,
+        evidence_id: eid.clone(),
+    });
+    eid
 }

@@ -1,0 +1,976 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jongos/Colossus/blob/main/schemas/report-v1.2.schema.json",
+  "title": "Colossus audit report 1.2.0",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.2.0"
+    },
+    "tool_version": {
+      "type": "string"
+    },
+    "timestamp_unix": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "complete": {
+      "type": "boolean"
+    },
+    "cancelled": {
+      "type": "boolean"
+    },
+    "inventory_coverage": {
+      "type": "string"
+    },
+    "roots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Artifact"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Candidate"
+      }
+    },
+    "repositories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Repository"
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Issue"
+      }
+    },
+    "totals": {
+      "$ref": "#/$defs/Totals"
+    },
+    "plan": {
+      "$ref": "#/$defs/Plan"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "root_identities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    }
+  },
+  "required": [
+    "schema_version",
+    "tool_version",
+    "timestamp_unix",
+    "complete",
+    "cancelled",
+    "inventory_coverage",
+    "roots",
+    "artifacts",
+    "evidence",
+    "candidates",
+    "repositories",
+    "issues",
+    "totals",
+    "plan",
+    "limitations",
+    "root_identities",
+    "provenance"
+  ],
+  "$defs": {
+    "Artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "identity": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "file",
+            "directory",
+            "reparse"
+          ]
+        },
+        "project_owner": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "logical_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allocated_bytes": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "modified_filetime": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hard_links": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "counted": {
+          "type": "boolean"
+        },
+        "originating_task": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "generation_method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dependencies": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retention_holds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "identity",
+        "kind",
+        "project_owner",
+        "logical_bytes",
+        "allocated_bytes",
+        "modified_filetime",
+        "hard_links",
+        "counted",
+        "originating_task",
+        "generation_method",
+        "dependencies",
+        "retention_holds"
+      ]
+    },
+    "Evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "artifact_id": {
+          "type": "string"
+        },
+        "observation": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "timestamp_unix": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "collector_version": {
+          "type": "string"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "artifact_id",
+        "observation",
+        "source",
+        "timestamp_unix",
+        "collector_version",
+        "limitations"
+      ]
+    },
+    "Candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "classification": {
+          "const": "review_needed"
+        },
+        "proposed_operation": {
+          "const": "investigate"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recovery_method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reconstruction_cost": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "artifact_id",
+        "classification",
+        "proposed_operation",
+        "evidence_ids",
+        "blockers",
+        "recovery_method",
+        "reconstruction_cost"
+      ]
+    },
+    "Issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "code",
+        "detail"
+      ]
+    },
+    "Repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "repository",
+            "linked_worktree_or_submodule"
+          ]
+        },
+        "head": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "gitdir_claim": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "common_dir_claim": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "locked": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "index_entries": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "possibly_modified": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "untracked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resolved_gitdir": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resolved_common_dir": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "index_checksum": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "kind",
+        "head",
+        "gitdir_claim",
+        "common_dir_claim",
+        "locked",
+        "index_entries",
+        "possibly_modified",
+        "untracked",
+        "limitations",
+        "resolved_gitdir",
+        "resolved_common_dir",
+        "index_checksum"
+      ]
+    },
+    "Plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.2.0"
+        },
+        "roots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "candidate_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "protected_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_approval": {
+          "type": "string"
+        },
+        "manifest_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "schema_version",
+        "roots",
+        "candidate_scope",
+        "protected_paths",
+        "required_approval",
+        "manifest_digest"
+      ]
+    },
+    "Receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "status": {
+          "const": "reserved_not_executable"
+        },
+        "attempted_operations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "completed_operations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "failures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recovery_locations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preservation_checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "disk_measurements": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "before_free_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "after_free_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "before_free_bytes",
+                "after_free_bytes"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "status",
+        "attempted_operations",
+        "completed_operations",
+        "failures",
+        "recovery_locations",
+        "preservation_checks",
+        "disk_measurements"
+      ],
+      "description": "Reserved for future versions. Phase 1 emits no receipts and executes no operations."
+    },
+    "Totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "logical_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allocated_known_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allocated_unknown_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unique_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hard_link_aliases": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "logical_bytes",
+        "allocated_known_bytes",
+        "allocated_unknown_files",
+        "unique_files",
+        "hard_link_aliases"
+      ]
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
+        },
+        "manifest_artifact_id": {
+          "type": "string"
+        },
+        "ecosystem": {
+          "enum": [
+            "cargo",
+            "npm"
+          ]
+        },
+        "declared_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "root",
+        "manifest_artifact_id",
+        "ecosystem",
+        "declared_name",
+        "evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "Dependency": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string"
+        },
+        "declared_path": {
+          "type": "string"
+        },
+        "relationship": {
+          "enum": [
+            "local_dependency",
+            "workspace_member"
+          ]
+        },
+        "target_artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resolution": {
+          "type": "string"
+        },
+        "evidence_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "project_id",
+        "declared_path",
+        "relationship",
+        "target_artifact_id",
+        "resolution",
+        "evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "ArtifactClaim": {
+      "type": "object",
+      "properties": {
+        "record_artifact_id": {
+          "type": "string"
+        },
+        "target_artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "declared_path": {
+          "type": "string"
+        },
+        "declared_owner": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "declared_generation_method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "declared_source_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retention_holds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resolution": {
+          "type": "string"
+        },
+        "evidence_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "record_artifact_id",
+        "target_artifact_id",
+        "declared_path",
+        "declared_owner",
+        "declared_generation_method",
+        "declared_source_revision",
+        "retention_holds",
+        "resolution",
+        "evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "Ownership": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "project_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "declared_owners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "enum": [
+            "context_only",
+            "declared_only",
+            "shared_context",
+            "conflicting_claims",
+            "unresolved"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "artifact_id",
+        "project_ids",
+        "declared_owners",
+        "status",
+        "evidence_ids"
+      ],
+      "additionalProperties": false
+    },
+    "ContentHash": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "sha256",
+        "bytes",
+        "evidence_id"
+      ],
+      "additionalProperties": false
+    },
+    "Provenance": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "bytes_read": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Project"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Dependency"
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactClaim"
+          }
+        },
+        "ownership": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Ownership"
+          }
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentHash"
+          }
+        },
+        "duplicate_groups": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "uniqueItems": true
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_hashes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContentHash"
+          }
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConsistencyCheck"
+          }
+        }
+      },
+      "required": [
+        "enabled",
+        "bytes_read",
+        "projects",
+        "dependencies",
+        "claims",
+        "ownership",
+        "hashes",
+        "duplicate_groups",
+        "limitations",
+        "source_hashes",
+        "checks"
+      ],
+      "additionalProperties": false
+    },
+    "ConsistencyCheck": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "dependency_manifest",
+            "source_revision"
+          ]
+        },
+        "subject_evidence_id": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "consistent",
+            "mismatch",
+            "unresolved"
+          ]
+        },
+        "observed_value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "subject_evidence_id",
+        "status",
+        "observed_value",
+        "supporting_evidence_ids",
+        "detail"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

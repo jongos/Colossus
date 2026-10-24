@@ -10,9 +10,11 @@ Implementation references checked during development:
 
 Recheck relevant primary documentation before implementing adapters: [Kondo](https://github.com/tbillington/kondo), [dua](https://github.com/Byron/dua-cli), [Czkawka](https://github.com/qarmin/czkawka), [uv cache](https://docs.astral.sh/uv/concepts/cache/), [pnpm store](https://pnpm.io/cli/store), [Send2Trash](https://github.com/arsenetar/send2trash), [FreeDesktop Trash spec](https://specifications.freedesktop.org/trash/latest/), [Windows free space](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskfreespaceexa). Their cleanup behavior is not implemented or relied upon in Phase 1.
 
-Milestone 2 completed locally: bounded content hashes, declared provenance and ownership context, inventoried worktree metadata resolution, and expanded Windows filesystem tests. See [results and remaining validation limits](MILESTONE-2.md).
+Milestone 2 published: bounded content hashes, declared provenance and ownership context, inventoried worktree metadata resolution, and expanded Windows filesystem tests. See [results and remaining validation limits](MILESTONE-2.md).
 
-Next milestone: corroborate declared build provenance and dependency relationships without executing builds, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
+Milestone 3 adds local source fingerprints, revision consistency and dependency-manifest checks. These are not authenticated build attestations.
+
+Next milestone: add externally corroborated build evidence and version-aware dependency checks without executing builds, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
 
 Later milestones, **plan only**:
 

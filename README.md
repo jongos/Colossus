@@ -2,7 +2,7 @@
 
 An evidence-first developer-workspace auditor: a Rust CLI with a portable Codex/Claude skill. Phase 1 inventories explicitly selected roots and identifies questions worth investigating. It performs no cleanup.
 
-**Status:** experimental Windows-first read-only milestone 2 (v0.2.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-2.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** experimental Windows-first read-only milestone 3 (v0.3.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-3.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -30,7 +30,7 @@ The same [skill folder](skills/colossus/SKILL.md) works with Codex and Claude Co
 
 ## Reports and tests
 
-- [Current JSON schema](schemas/report-v1.1.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
+- [Current JSON schema](schemas/report-v1.2.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
 - [Architecture and security boundaries](docs/ARCHITECTURE.md).
 - [Validation and performance](docs/VALIDATION.md).
 - [Research and roadmap](docs/ROADMAP.md).
@@ -45,3 +45,7 @@ python scripts/benchmark.py --binary target/release/colossus.exe --output work/b
 Tests create synthetic disposable directories; they never use private projects. Fixture directories are retained in the OS temporary directory for inspection. Benchmarks and reports belong in ignored `work/`, `reports/` or a user-selected external location. No database is used.
 
 Public source is available for inspection. No redistribution license has been selected yet; publication alone does not grant an open-source license. No competitor implementation code is included.
+
+## Milestone 3
+
+Optional provenance collection now fingerprints observed evidence sources and compares local revision claims and dependency targets with bounded observations. Matching local values remain unauthenticated consistency evidence. See [Milestone 3 validation](docs/MILESTONE-3.md) and [comparison semantics](docs/CORROBORATION.md). The CLI remains read-only.
