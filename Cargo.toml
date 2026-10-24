@@ -3,6 +3,7 @@ name = "colossus-audit"
 version = "0.7.0"
 edition = "2021"
 description = "Read-only, evidence-first developer workspace auditor"
+license = "Apache-2.0"
 publish = false
 
 [[bin]]
