@@ -105,6 +105,7 @@ pub fn collect(
         .map(|a| (PathBuf::from(&a.path), a.clone()))
         .collect();
     let mut budget = Budget::new(max_bytes);
+    let mut workspace_paths_remaining = 10_000;
     if enabled {
         for (path, a) in &artifacts {
             if records_full(r) || r.provenance.source_hashes.len() >= MAX_RECORDS {
@@ -185,8 +186,11 @@ pub fn collect(
                     value.get("version").and_then(Value::as_str)
                 }),
                 declared_name,
-                evidence_id: eid,
+                evidence_id: eid.clone(),
             });
+            if ecosystem == "cargo" {
+                crate::workspaces::record(r, &pid, &eid, &value, &mut workspace_paths_remaining);
+            }
             let sections = if ecosystem == "cargo" {
                 vec!["dependencies", "dev-dependencies", "build-dependencies"]
             } else {
@@ -297,6 +301,7 @@ pub fn collect(
     if enabled {
         crate::corroboration::collect(r, &artifacts, &mut budget, stop);
         crate::lockfiles::collect(r, &artifacts, &mut budget, stop);
+        crate::workspaces::collect(r, &artifacts, stop);
     }
     crate::statements::collect(r, &artifacts, statement_paths, &mut budget, stop);
     if stop() {

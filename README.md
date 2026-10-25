@@ -2,7 +2,7 @@
 
 An evidence-first developer-workspace auditor: a Rust CLI with a portable Codex/Claude skill. Phase 1 inventories explicitly selected roots and identifies questions worth investigating. It performs no cleanup.
 
-**Status:** experimental Windows-first read-only milestone 7 (v0.7.0). Every candidate remains protected. No file is declared proven disposable. Linux and macOS scanning fail explicitly; they are future work. See [current milestone validation](docs/MILESTONE-7.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** experimental Windows-first read-only milestone 8 (v0.8.0). Every candidate remains protected. No file is declared proven disposable. The Rust CLI rejects Linux and macOS scanning; the optional Python metadata survey has separate platform limits below. See [current milestone validation](docs/MILESTONE-8.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -30,7 +30,7 @@ The same [skill folder](skills/colossus/SKILL.md) works with Codex and Claude Co
 
 ## Reports and tests
 
-- [Current JSON schema](schemas/report-v1.6.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
+- [Current JSON schema](schemas/report-v1.7.schema.json) and [untrusted artifact-record schema](schemas/artifact-records-v1.schema.json). The original [v1.0 report schema](schemas/report-v1.schema.json) remains for historical reports.
 - [Architecture and security boundaries](docs/ARCHITECTURE.md).
 - [Validation and performance](docs/VALIDATION.md).
 - [Research and roadmap](docs/ROADMAP.md).
@@ -75,3 +75,11 @@ With `--provenance`, bounded adjacent Cargo.lock v3/v4 observations compare expl
 ## Milestone 7
 
 Select a shared lockfile explicitly with `--provenance --cargo-lockfile C:\dev\workspace\member\Cargo.toml C:\dev\workspace\Cargo.lock`. Both files must be inventoried in authorized roots. Repeat the pair for additional members. These caller-selected associations do not verify Cargo workspace membership or resolver behavior. See [selection rules](docs/LOCKFILES.md) and [Milestone 7 validation](docs/MILESTONE-7.md).
+
+## Milestone 8
+
+Explicit Cargo lockfile selections now receive a separate check against observed literal workspace declarations. Exclusions, conflicting package.workspace paths and nested workspace declarations remain visible independently of lockfile version agreement. See [workspace declaration semantics](docs/WORKSPACES.md) and [Milestone 8 validation](docs/MILESTONE-8.md).
+
+## Portable project storage survey
+
+The skill bundles a read-only Python 3.10+ [resumable metadata survey](skills/colossus/references/portable-survey.md) for Windows, macOS and Linux. It adds disjoint allocation summaries, coverage gaps and before/after accounting without changing the Rust report schema or adding deletion operations. Run its synthetic tests with `python -m unittest discover -s tests -p test_portable_survey.py -v`. Windows is tested; macOS/Linux implementations still need native validation.

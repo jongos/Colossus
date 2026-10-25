@@ -28,7 +28,7 @@ A directory named `target`, `build` or `dist` beside an inventoried build-manife
 
 Optional [provenance evidence](PROVENANCE.md) adds parsed manifest context, declared path relationships, unauthenticated artifact records, ownership conflicts and selected-file SHA-256 groups. It does not establish exclusive ownership, executed build provenance, recoverability or disposable duplicates. The original Artifact fields for verified generation/recovery remain unknown. No superseded-release reasoning, registry trust, process enumeration, cache pruning or eligibility-for-deletion classification is implemented. Empty/null fields mean unknown, never verified absent.
 
-The digest hashes the UTF-8 compact serde JSON report with `plan.manifest_digest` set to the empty string. It binds evidence and scope, but is not a signature or approval. Current report/Plan schema version is 1.6.0; the 1.0.0 through 1.3.0 schemas are retained for historical reports. Receipt remains reserved and no receipt is emitted. No executor, quarantine, restoration, pruning or watcher code exists.
+The digest hashes the UTF-8 compact serde JSON report with `plan.manifest_digest` set to the empty string. It binds evidence and scope, but is not a signature or approval. Current report/Plan schema version is 1.7.0; the 1.0.0 through 1.3.0 schemas are retained for historical reports. Receipt remains reserved and no receipt is emitted. No executor, quarantine, restoration, pruning or watcher code exists.
 
 ## Output boundary
 
@@ -43,3 +43,5 @@ Signature verification binds the exact DSSE payload bytes and payload type. The 
 `lockfiles` reads only adjacent inventoried Cargo.lock files under provenance collection, sharing the identity-checked content budget. It compares declarations without invoking a package manager. See [limits](LOCKFILES.md).
 
 Explicit lockfile selections are validated before inventory, retained as caller configuration in reports, and resolved only against inventoried Cargo manifests/files. Selected observations are cached within the existing content budget; missing selections never expand scope.
+
+`workspaces` extracts bounded literal declarations from the manifest bytes already read. It checks explicit lockfile associations within inventory, without extra content reads or Cargo execution. See [workspace checks](WORKSPACES.md).

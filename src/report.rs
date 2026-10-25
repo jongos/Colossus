@@ -64,6 +64,9 @@ pub fn human(r: &Report) -> String {
         ));
     }
     s.push_str(&format!("Signature policy: any one of {} explicitly supplied Ed25519 public keys; no default trust\n",r.provenance.trusted_keys.len()));
+    for w in &r.provenance.cargo_workspaces {
+        s.push_str(&format!("Cargo workspace declaration for {}: table {}; supported {}; members {:?}; exclude {:?}; package.workspace {:?}; evidence {}\n",w.project_id,w.has_workspace,w.supported,w.members,w.exclude,w.package_workspace,w.evidence_id));
+    }
     for selection in &r.provenance.cargo_lockfiles {
         s.push_str(&format!("Caller-selected Cargo lockfile: manifest {:?} -> {:?}; association is not verified workspace membership\n",selection.manifest_path,selection.lockfile_path));
     }

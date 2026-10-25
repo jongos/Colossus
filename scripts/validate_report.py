@@ -1,5 +1,6 @@
 """Validate schema and cross-record invariants. Requires the development-only jsonschema package."""
 import argparse
+import ntpath
 import json
 from pathlib import Path
 from jsonschema import Draft202012Validator
@@ -36,6 +37,12 @@ def validate(report, schema):
         for project in projects.values():
             assert project['manifest_artifact_id'] in artifacts
             assert evidence[project['evidence_id']]['artifact_id']==project['manifest_artifact_id']
+        workspaces={w['project_id']:w for w in p.get('cargo_workspaces',[])}
+        assert len(workspaces)==len(p.get('cargo_workspaces',[]))
+        assert sum(len(w['members'])+len(w['exclude']) for w in workspaces.values())<=10000
+        for w in workspaces.values():
+            assert projects[w['project_id']]['ecosystem']=='cargo'
+            assert w['evidence_id']==projects[w['project_id']]['evidence_id']
         for dependency in p['dependencies']:
             assert dependency['project_id'] in projects
             assert dependency['evidence_id'] in evidence
@@ -77,7 +84,7 @@ def validate(report, schema):
         statements={x['evidence_id']:x for x in p.get('statement_subjects',[])}
         for statement in statements.values():
             assert statement['statement_artifact_id'] in artifacts
-            if report['schema_version'] in ('1.4.0','1.5.0','1.6.0'):
+            if report['schema_version'] in ('1.4.0','1.5.0','1.6.0','1.7.0'):
                 assert statement['authentication']==auth[statement['statement_artifact_id']]['status']
             assert evidence[statement['evidence_id']]['artifact_id']==statement['statement_artifact_id']
             assert statement['target_artifact_id'] is None or statement['target_artifact_id'] in artifacts
@@ -88,7 +95,7 @@ def validate(report, schema):
             if kind=='statement_digest':
                 assert subject in statements
                 statement=statements[subject]
-                if report['schema_version'] in ('1.4.0','1.5.0','1.6.0'): assert auth[statement['statement_artifact_id']]['evidence_id'] in check['supporting_evidence_ids']
+                if report['schema_version'] in ('1.4.0','1.5.0','1.6.0','1.7.0'): assert auth[statement['statement_artifact_id']]['evidence_id'] in check['supporting_evidence_ids']
                 observed=hashes.get(statement['target_artifact_id'])
                 expected=statement['declared_sha256']
                 assert check['observed_value']==(observed['sha256'] if observed else None)
@@ -96,6 +103,25 @@ def validate(report, schema):
                 assert check['status']==expected_status
                 if observed:
                     assert observed['evidence_id'] in check['supporting_evidence_ids']
+            elif kind=='cargo_selected_workspace_membership':
+                member=next(x for x in projects.values() if x['evidence_id']==subject)
+                assert member['ecosystem']=='cargo'
+                manifest_path=artifacts[member['manifest_artifact_id']]['path'].replace('/','\\')
+                assert manifest_path in selections
+                root=projects.get(check['observed_value'])
+                if root:
+                    assert root['ecosystem']=='cargo'
+                    assert root['evidence_id'] in check['supporting_evidence_ids']
+                    assert ntpath.dirname(selections[manifest_path])==root['root']
+                if check['status']=='consistent':
+                    assert ntpath.basename(selections[manifest_path])=='Cargo.lock'
+                    w=workspaces[root['id']];m=workspaces[member['id']]
+                    assert w['supported'] and m['supported'] and w['has_workspace']
+                    assert root['id']==member['id'] or not m['has_workspace']
+                    if m['package_workspace'] is not None:
+                        assert ntpath.normpath(ntpath.join(member['root'],m['package_workspace']))==root['root']
+                    assert member['root'] not in [ntpath.normpath(ntpath.join(root['root'],x)) for x in w['exclude']]
+                    assert (root['id']==member['id'] and member['declared_name']) or member['root'] in [ntpath.normpath(ntpath.join(root['root'],x)) for x in w['members']]
             elif kind=='cargo_lock_package_version':
                 assert subject in {x['evidence_id'] for x in projects.values() if x['ecosystem']=='cargo'}
             elif kind in ('cargo_package_name','cargo_version_requirement','cargo_lock_dependency_version'):
@@ -141,6 +167,6 @@ if __name__ == '__main__':
     ap.add_argument('--schema', type=Path)
     args = ap.parse_args()
     report=json.loads(args.report.read_text(encoding='utf-8'))
-    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json','1.4.0':'report-v1.4.schema.json','1.5.0':'report-v1.5.schema.json','1.6.0':'report-v1.6.schema.json'}[report['schema_version']]
+    schema=args.schema or Path(__file__).resolve().parents[1] / 'schemas' / {'1.0.0':'report-v1.schema.json','1.1.0':'report-v1.1.schema.json','1.2.0':'report-v1.2.schema.json','1.3.0':'report-v1.3.schema.json','1.4.0':'report-v1.4.schema.json','1.5.0':'report-v1.5.schema.json','1.6.0':'report-v1.6.schema.json','1.7.0':'report-v1.7.schema.json'}[report['schema_version']]
     validate(report, json.loads(schema.read_text(encoding='utf-8')))
     print('Schema and cross-record invariants passed.')

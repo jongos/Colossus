@@ -2,3 +2,6 @@
 /work/
 /reports/
 *.partial
+
+__pycache__/
+*.py[cod]

@@ -11,3 +11,5 @@ pub mod statements;
 pub use scan::{audit, Options};
 
 pub mod lockfiles;
+
+pub mod workspaces;

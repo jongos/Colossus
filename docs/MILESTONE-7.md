@@ -1,6 +1,6 @@
 # Milestone 7: explicit shared lockfile selections
 
-Milestone 6 is public at [`358bf20`](https://github.com/jongos/Colossus/commit/358bf20655024a1166916fad1915f78e26c531d9), with remote main verified after push. The installed skill and executable are now published v0.6.0. Milestone 7 is local v0.7.0 development, uncommitted and unpushed. Colossus remains read-only.
+Milestone 6 is public at [`358bf20`](https://github.com/jongos/Colossus/commit/358bf20655024a1166916fad1915f78e26c531d9), with remote main verified after push. The installed skill and executable are now published v0.6.0. Milestone 7 is published at [`8fcd294`](https://github.com/jongos/Colossus/commit/8fcd29414e35b58b4962cbfa14980040f5833a36), with remote main verified after push. Colossus remains read-only.
 
 ## Delivered
 
@@ -28,3 +28,5 @@ Formatting, Clippy with warnings denied, the standalone release build and instal
 Published v0.6.0 is installed at `C:\Users\jongo\.local\bin\colossus.exe` and `C:\Users\jongo\.codex\skills\colossus`; version and source equality were checked. The previous installation is preserved in this task's `work/installed-v0.5-backup`. A new terminal may be needed to refresh PATH; the updated skill is available next turn.
 
 The local checkout development binary is v0.7.0; it does not replace the installed published version. Automatic or declared workspace-membership validation, authenticated predicate/build-context checks and dedicated-host filesystem coverage remain future milestones. No build execution, cleanup, quarantine, signing or deletion operation was added.
+
+The installed skill and executable were subsequently updated to published v0.7.0 during Milestone 8 development; v0.6.0 was preserved.
