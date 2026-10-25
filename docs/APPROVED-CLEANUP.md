@@ -1,6 +1,6 @@
 # Approved space reclamation: next implementation milestone
 
-Status: implementation contract; initial file-executor source passes Windows CI compilation and refusal tests. Successful deletion remains unvalidated; not installed or released. The current CLI and Python survey remain read-only. This milestone supersedes the roadmap's previous instruction to keep the next milestone read-only. Do not advertise deletion as implemented until the executor and destructive fixture tests pass.
+Status: implementation contract; initial file-executor source passes Windows CI compilation and refusal tests. One explicitly approved synthetic deletion/preservation/space-observation test has passed; see MILESTONE-9.md. The audit command and Python survey remain read-only. The executor supports exact regular files only; directory cleanup below remains a future contract. This milestone supersedes the roadmap's previous instruction to keep the next milestone read-only. Do not advertise deletion as implemented until the executor and destructive fixture tests pass.
 
 ## User workflow
 
