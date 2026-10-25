@@ -24,7 +24,7 @@ Milestone 7 adds explicit caller-selected manifest/lockfile associations within 
 
 Milestone 8 compares explicit selections with bounded literal workspace declarations; Cargo membership and resolver behavior remain unverified.
 
-## Next milestone: approved space reclamation
+## Milestone 9: approved space reclamation
 
 The product goal is to reclaim development-workspace storage with explicit user approval. Read-only auditing was Phase 1, not the final product boundary. Prioritize the planner, approval boundary and deletion executor over further workspace-inheritance/provenance expansion. See [the implementation contract](APPROVED-CLEANUP.md).
 
@@ -37,3 +37,8 @@ The product goal is to reclaim development-workspace storage with explicit user 
 Follow-on milestones: recoverable quarantine/restoration without overwriting; independently reviewed binaries and public beta; broader filesystem/platform coverage; version-aware native package-manager and Git worktree adapters; additional provenance/inheritance evidence where it improves cleanup decisions. Unsupported safety conditions block destructive execution.
 
 System cleanup, personal media, database maintenance, automatic deletion schedules and Git history rewriting are out of scope.
+
+
+## Milestone 10: receipt diagnostics
+
+Add bounded read-only review of interrupted, partial and completed receipt claims. Validate event order, exact target identities, counters and storage arithmetic without opening referenced targets. Never retry deletion or treat a receipt as approval. See [Milestone 10](MILESTONE-10.md). Further work remains broader interruption fault injection, independent review and native adapters for currently unsupported cleanup scopes.

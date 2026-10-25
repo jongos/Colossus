@@ -38,7 +38,7 @@ pub struct Plan {
 fn error(s: impl ToString) -> io::Error {
     io::Error::other(s.to_string())
 }
-fn digest(p: &Plan) -> io::Result<String> {
+pub(crate) fn digest(p: &Plan) -> io::Result<String> {
     let mut p = p.clone();
     p.digest.clear();
     Ok(format!(
@@ -327,7 +327,7 @@ fn root(path: &Path) -> io::Result<platform::Pinned> {
     )?;
     Ok(p)
 }
-fn shape(p: &Plan) -> io::Result<()> {
+pub(crate) fn shape(p: &Plan) -> io::Result<()> {
     if p.schema_version != "cleanup-plan-1"
         || p.operation != "permanent-delete-files"
         || p.targets.is_empty()
@@ -436,7 +436,7 @@ fn event(f: &mut File, v: serde_json::Value) -> io::Result<()> {
     f.sync_all()
 }
 pub fn review(p: &Plan) -> String {
-    let mut s=format!("PERMANENT DELETION — no undo or automatic recovery\nPlan {}\nRoot {:?}\nReason {:?}\nRecovery consequences {:?}\n",p.digest,p.root,p.reason,p.recovery);
+    let mut s=format!("PERMANENT DELETION â€” no undo or automatic recovery\nPlan {}\nRoot {:?}\nReason {:?}\nRecovery consequences {:?}\n",p.digest,p.root,p.reason,p.recovery);
     for t in &p.targets {
         s.push_str(&format!(
             "DELETE {:?}: {} logical bytes, {} allocated bytes, identity {}, SHA256 {}\n",
@@ -558,7 +558,19 @@ pub fn execute(
 pub fn cli(args: impl Iterator<Item = String>) -> Result<i32, String> {
     use std::io::IsTerminal;
     let mut args = args;
-    let action = args.next().ok_or("use cleanup plan|review|execute")?;
+    let action = args.next().ok_or("use cleanup plan|review|execute|receipt")?;
+    if action == "receipt" {
+        if args.next().as_deref() != Some("--receipt") {
+            return Err("use cleanup receipt --receipt ABSOLUTE_RECEIPT".into());
+        }
+        let path = args.next().ok_or("--receipt requires a path")?;
+        if args.next().is_some() {
+            return Err("receipt review accepts only one --receipt path".into());
+        }
+        let review = crate::cleanup_receipt::load(Path::new(&path)).map_err(|e| e.to_string())?;
+        println!("{}", serde_json::to_string_pretty(&review).map_err(|e| e.to_string())?);
+        return Ok(if review.completion == crate::cleanup_receipt::Completion::CompleteReported { 0 } else { 2 });
+    }
     let mut root_path = None;
     let mut files = vec![];
     let mut plan_path = None;

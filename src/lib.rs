@@ -15,3 +15,5 @@ pub mod lockfiles;
 pub mod workspaces;
 
 pub mod cleanup;
+
+pub mod cleanup_receipt;

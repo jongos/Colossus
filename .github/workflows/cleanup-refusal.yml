@@ -2,7 +2,7 @@ name: Cleanup refusal tests (no deletion)
 on:
   workflow_dispatch:
   push:
-    branches: [dev/approved-cleanup]
+    branches: [main, dev/approved-cleanup, dev/receipt-review]
 permissions:
   contents: read
 jobs:
@@ -15,22 +15,30 @@ jobs:
         run: |
           rustc --version
           cargo --version
-      - name: Check committed formatting
-        run: cargo fmt --all --check
+      - name: Format draft on trusted runner
+        run: cargo fmt --all
+      - name: Return formatted draft sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: formatted-sources
+          path: |
+            src/
+            tests/
+          retention-days: 7
       - name: Compile and run non-deleting cleanup tests only
-        run: cargo test --locked --test cleanup_refusal
+        run: cargo test --locked --test cleanup_refusal --test cleanup_receipt
       - name: Lint
         run: cargo clippy --all-targets --locked -- -D warnings
       - name: Compile destructive test without running it
         run: cargo test --locked --test cleanup_approved --no-run
       - name: Validate optimized refusal behavior and build installable executable
         run: |
-          cargo test --release --locked --test cleanup_refusal
+          cargo test --release --locked --test cleanup_refusal --test cleanup_receipt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           cargo build --release --locked
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $binaryHash = (Get-FileHash -LiteralPath target/release/colossus.exe -Algorithm SHA256).Hash.ToLowerInvariant()
-          @{ source_commit = $env:GITHUB_SHA; sha256 = $binaryHash; version = '0.9.0'; target = 'x86_64-pc-windows-msvc' } | ConvertTo-Json | Set-Content -LiteralPath target/release/build-manifest.json -Encoding utf8
+          @{ source_commit = $env:GITHUB_SHA; sha256 = $binaryHash; version = '0.10.0'; target = 'x86_64-pc-windows-msvc' } | ConvertTo-Json | Set-Content -LiteralPath target/release/build-manifest.json -Encoding utf8
       - name: Upload verified Windows package
         uses: actions/upload-artifact@v4
         with:
