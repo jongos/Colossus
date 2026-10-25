@@ -436,7 +436,7 @@ fn event(f: &mut File, v: serde_json::Value) -> io::Result<()> {
     f.sync_all()
 }
 pub fn review(p: &Plan) -> String {
-    let mut s=format!("PERMANENT DELETION â€” no undo or automatic recovery\nPlan {}\nRoot {:?}\nReason {:?}\nRecovery consequences {:?}\n",p.digest,p.root,p.reason,p.recovery);
+    let mut s=format!("PERMANENT DELETION — no undo or automatic recovery\nPlan {}\nRoot {:?}\nReason {:?}\nRecovery consequences {:?}\n",p.digest,p.root,p.reason,p.recovery);
     for t in &p.targets {
         s.push_str(&format!(
             "DELETE {:?}: {} logical bytes, {} allocated bytes, identity {}, SHA256 {}\n",

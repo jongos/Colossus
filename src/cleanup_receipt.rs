@@ -243,10 +243,16 @@ pub fn analyze(bytes: &[u8]) -> io::Result<Review> {
                 let delta = free_bytes_before
                     .zip(free_bytes_after)
                     .map(|(b, a)| i128::from(a) - i128::from(b));
-                let observed = observed_free_space_delta_bytes.map(|n| {
-                    n.as_i64().map(i128::from).or_else(|| n.as_u64().map(i128::from))
-                        .ok_or_else(|| error("free-space delta must be an exactly represented integer"))
-                }).transpose()?;
+                let observed = observed_free_space_delta_bytes
+                    .map(|n| {
+                        n.as_i64()
+                            .map(i128::from)
+                            .or_else(|| n.as_u64().map(i128::from))
+                            .ok_or_else(|| {
+                                error("free-space delta must be an exactly represented integer")
+                            })
+                    })
+                    .transpose()?;
                 if delta != observed {
                     return Err(error("free-space arithmetic mismatch"));
                 }

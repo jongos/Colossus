@@ -362,7 +362,12 @@ fn negative_delta_is_preserved_without_claiming_reclamation() {
     let mut rows = complete();
     rows.last_mut().unwrap()["free_bytes_after"] = json!(9000);
     rows.last_mut().unwrap()["observed_free_space_delta_bytes"] = json!(-1000);
-    assert_eq!(analyze(&bytes(&rows)).unwrap().observed_free_space_delta_bytes, Some(-1000));
+    assert_eq!(
+        analyze(&bytes(&rows))
+            .unwrap()
+            .observed_free_space_delta_bytes,
+        Some(-1000)
+    );
 }
 #[test]
 fn large_unsigned_delta_is_exact() {
@@ -370,7 +375,12 @@ fn large_unsigned_delta_is_exact() {
     rows[0]["free_bytes_before"] = json!(0);
     rows.last_mut().unwrap()["free_bytes_after"] = json!(u64::MAX);
     rows.last_mut().unwrap()["observed_free_space_delta_bytes"] = json!(u64::MAX);
-    assert_eq!(analyze(&bytes(&rows)).unwrap().observed_free_space_delta_bytes, Some(i128::from(u64::MAX)));
+    assert_eq!(
+        analyze(&bytes(&rows))
+            .unwrap()
+            .observed_free_space_delta_bytes,
+        Some(i128::from(u64::MAX))
+    );
 }
 #[test]
 fn floating_point_delta_is_rejected() {
