@@ -26,7 +26,7 @@ fn run() -> Result<i32, String> {
         }
         Some("cleanup") => return colossus_audit::cleanup::cli(args),
         Some("audit") => {}
-        _ => return Err("only the read-only audit command is available; use --help".into()),
+        _ => return Err("use audit or cleanup; see --help".into()),
     }
     let mut options = Options::new(vec![]);
     options.progress = true;
