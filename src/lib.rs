@@ -13,3 +13,5 @@ pub use scan::{audit, Options};
 pub mod lockfiles;
 
 pub mod workspaces;
+
+pub mod cleanup;

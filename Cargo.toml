@@ -1,8 +1,8 @@
 [package]
 name = "colossus-audit"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
-description = "Read-only, evidence-first developer workspace auditor"
+description = "Developer workspace auditor with explicitly approved file cleanup"
 publish = false
 
 [[bin]]

@@ -1,0 +1,33 @@
+name: Cleanup refusal tests (no deletion)
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev/approved-cleanup]
+permissions:
+  contents: read
+jobs:
+  refusal-tests:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show runner toolchain
+        run: |
+          rustc --version
+          cargo --version
+      - name: Format draft on trusted runner
+        run: cargo fmt --all
+      - name: Save formatted sources for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: formatted-sources
+          path: |
+            src/
+            tests/
+          retention-days: 7
+      - name: Compile and run non-deleting cleanup tests only
+        run: cargo test --locked --test cleanup_refusal
+      - name: Lint
+        run: cargo clippy --all-targets --locked -- -D warnings
+      - name: Compile destructive test without running it
+        run: cargo test --locked --test cleanup_approved --no-run

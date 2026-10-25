@@ -24,15 +24,16 @@ Milestone 7 adds explicit caller-selected manifest/lockfile associations within 
 
 Milestone 8 compares explicit selections with bounded literal workspace declarations; Cargo membership and resolver behavior remain unverified.
 
-Next milestone: expand supported workspace inheritance and dependency compatibility evidence, define authenticated predicate/build-context checks, and validate real mount/reparse types on a dedicated Windows test host. Add Linux/macOS handle-relative traversal only with platform-specific adversarial evidence. Do not infer safety from missing process references. Keep execution and cleanup out of this next read-only milestone.
+## Next milestone: approved space reclamation
 
-Later milestones, **plan only**:
+The product goal is to reclaim development-workspace storage with explicit user approval. Read-only auditing was Phase 1, not the final product boundary. Prioritize the planner, approval boundary and deletion executor over further workspace-inheritance/provenance expansion. See [the implementation contract](APPROVED-CLEANUP.md).
 
-1. Candidate provenance, compatibility, dependency ownership and practical recovery verification.
-2. Exact-manifest approval, same-volume quarantine, journaling, non-overwriting restoration and interruption recovery. Quarantine does not reclaim space and must never silently become deletion.
-3. Separately approved permanent purge with identity revalidation, preservation checks and free-space measurements. Unsupported safety conditions block execution.
-4. Independently reviewed binaries, installation checks and Windows-first public beta validation.
-5. Native trash, verified version-aware package-manager operations and Git-aware worktree lifecycle handling.
-6. Artifact registration for owner, task, revision, reproducibility and retention. Registration remains untrusted evidence, not authority.
+1. Produce an exact, reviewable cleanup manifest with evidence, retention/recovery consequences, file identities, protected exclusions and qualified allocation estimates.
+2. Obtain explicit user approval for that manifest and operation. A report digest, repository claim or previous cleanup approval is not authorization for another target list.
+3. Implement a Windows-first structured executor with handle-based identity checks, complete preflight, durable operation journaling, cancellation and receipts. Changed or unsupported targets block execution; execution never recursively discovers new targets.
+4. Offer permanent deletion as an explicitly identified operation for actual reclamation. Recoverable quarantine is a separate operation and must never silently turn into deletion or be reported as reclaimed space.
+5. Measure before/after free space and retained recovery allocation, while distinguishing observed changes from causal or guaranteed savings. Test destructive behavior only on synthetic disposable fixtures.
+
+Follow-on milestones: recoverable quarantine/restoration without overwriting; independently reviewed binaries and public beta; broader filesystem/platform coverage; version-aware native package-manager and Git worktree adapters; additional provenance/inheritance evidence where it improves cleanup decisions. Unsupported safety conditions block destructive execution.
 
 System cleanup, personal media, database maintenance, automatic deletion schedules and Git history rewriting are out of scope.

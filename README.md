@@ -1,8 +1,8 @@
 # Colossus
 
-An evidence-first developer-workspace auditor: a Rust CLI with a portable Codex/Claude skill. Phase 1 inventories explicitly selected roots and identifies questions worth investigating. It performs no cleanup.
+A developer-workspace cleanup tool: a Rust CLI with a portable Codex/Claude skill. The product goal is to reclaim storage through reviewed, explicitly approved cleanup with verifiable results. The current implementation provides the read-only audit foundation; the next milestone is [approved space reclamation](docs/APPROVED-CLEANUP.md).
 
-**Status:** experimental Windows-first read-only milestone 8 (v0.8.0). Every candidate remains protected. No file is declared proven disposable. The Rust CLI rejects Linux and macOS scanning; the optional Python metadata survey has separate platform limits below. See [current milestone validation](docs/MILESTONE-8.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** v0.9.0 cleanup executor source is under development and NOT validated or installed. Published audit validation remains Milestone 8. Every candidate remains protected. No file is declared proven disposable. The Rust CLI rejects Linux and macOS scanning; the optional Python metadata survey has separate platform limits below. See [current milestone validation](docs/MILESTONE-8.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -83,3 +83,8 @@ Explicit Cargo lockfile selections now receive a separate check against observed
 ## Portable project storage survey
 
 The skill bundles a read-only Python 3.10+ [resumable metadata survey](skills/colossus/references/portable-survey.md) for Windows, macOS and Linux. It adds disjoint allocation summaries, coverage gaps and before/after accounting without changing the Rust report schema or adding deletion operations. Run its synthetic tests with `python -m unittest discover -s tests -p test_portable_survey.py -v`. Windows is tested; macOS/Linux implementations still need native validation.
+
+
+## Approved cleanup development
+
+A separate `cleanup plan`, `cleanup review`, and `cleanup execute` flow is being implemented. The executor is not ready for real use: compilation and destructive synthetic validation are pending. Audit and portable survey commands remain read-only. See [development status and restricted scope](docs/MILESTONE-9.md).

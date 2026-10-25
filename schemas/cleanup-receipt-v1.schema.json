@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "One line of an append-only cleanup journal",
+  "type": "object",
+  "required": [
+    "event"
+  ],
+  "properties": {
+    "event": {
+      "enum": [
+        "approved_preflight",
+        "delete_intent",
+        "removed",
+        "outcome_unconfirmed",
+        "failed",
+        "finished"
+      ]
+    },
+    "plan": {
+      "$ref": "cleanup-plan-v1.schema.json"
+    },
+    "schema_version": {
+      "const": "cleanup-receipt-1"
+    },
+    "complete": {
+      "type": "boolean"
+    },
+    "causal_reclaimed_bytes": {
+      "type": "null"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "const": "approved_preflight"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "schema_version",
+          "plan",
+          "free_bytes_before",
+          "limitations"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "enum": [
+              "delete_intent",
+              "removed",
+              "outcome_unconfirmed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "path",
+          "identity"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "const": "failed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "path",
+          "error"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event": {
+            "const": "finished"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "complete",
+          "removed_files",
+          "planned_files",
+          "selected_removed_allocation_bytes",
+          "free_bytes_after",
+          "observed_free_space_delta_bytes",
+          "causal_reclaimed_bytes",
+          "cancelled"
+        ]
+      }
+    }
+  ]
+}
