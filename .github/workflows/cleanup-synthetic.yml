@@ -1,0 +1,45 @@
+name: Approval-gated synthetic cleanup
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev/approved-cleanup]
+    paths:
+      - .github/workflows/cleanup-synthetic.yml
+permissions:
+  contents: read
+jobs:
+  synthetic:
+    runs-on: windows-2025
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile without deleting fixtures
+        run: |
+          cargo build --locked
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --test cleanup_approved --no-run
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --test cleanup_refusal
+      - name: Create synthetic targets and exact plan
+        run: python scripts/synthetic_cleanup_ci.py prepare
+      - name: Publish exact plan for human review
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.COLOSSUS_SYNTHETIC_CONTROL }}
+          retention-days: 7
+      - name: Wait for explicit approval of this plan on this runner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/synthetic_cleanup_ci.py wait
+      - name: Run only the approved exact-target deletion test
+        run: cargo test --locked --test cleanup_approved human_approved_synthetic_reclamation -- --ignored --exact --nocapture
+      - name: Validate removed allocation and observed free-space increase
+        run: python scripts/synthetic_cleanup_ci.py verify
+      - name: Preserve plan and receipt evidence
+        if: always() && env.COLOSSUS_SYNTHETIC_CONTROL != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.COLOSSUS_SYNTHETIC_CONTROL }}
+          retention-days: 30
