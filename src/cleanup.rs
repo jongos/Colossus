@@ -558,7 +558,9 @@ pub fn execute(
 pub fn cli(args: impl Iterator<Item = String>) -> Result<i32, String> {
     use std::io::IsTerminal;
     let mut args = args;
-    let action = args.next().ok_or("use cleanup plan|review|execute|receipt")?;
+    let action = args
+        .next()
+        .ok_or("use cleanup plan|review|execute|receipt")?;
     if action == "receipt" {
         if args.next().as_deref() != Some("--receipt") {
             return Err("use cleanup receipt --receipt ABSOLUTE_RECEIPT".into());
@@ -568,8 +570,17 @@ pub fn cli(args: impl Iterator<Item = String>) -> Result<i32, String> {
             return Err("receipt review accepts only one --receipt path".into());
         }
         let review = crate::cleanup_receipt::load(Path::new(&path)).map_err(|e| e.to_string())?;
-        println!("{}", serde_json::to_string_pretty(&review).map_err(|e| e.to_string())?);
-        return Ok(if review.completion == crate::cleanup_receipt::Completion::CompleteReported { 0 } else { 2 });
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&review).map_err(|e| e.to_string())?
+        );
+        return Ok(
+            if review.completion == crate::cleanup_receipt::Completion::CompleteReported {
+                0
+            } else {
+                2
+            },
+        );
     }
     let mut root_path = None;
     let mut files = vec![];

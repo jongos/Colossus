@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Read-only review of unauthenticated cleanup receipt claims",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_digest",
+    "completion",
+    "targets",
+    "complete_events",
+    "trailing_partial_bytes",
+    "reported_removed_files",
+    "reported_removed_allocation_bytes",
+    "free_bytes_before",
+    "free_bytes_after",
+    "observed_free_space_delta_bytes",
+    "cancelled_reported",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "cleanup-receipt-review-1"
+    },
+    "plan_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "completion": {
+      "enum": [
+        "complete_reported",
+        "partial_reported",
+        "interrupted"
+      ]
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "identity",
+          "state"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "identity": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "unattempted",
+              "intent_unresolved",
+              "reported_removed",
+              "reported_failed",
+              "outcome_unconfirmed"
+            ]
+          }
+        }
+      }
+    },
+    "complete_events": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 130
+    },
+    "trailing_partial_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2097152
+    },
+    "reported_removed_files": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 64
+    },
+    "reported_removed_allocation_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 18446744073709551615
+    },
+    "free_bytes_before": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 18446744073709551615
+    },
+    "free_bytes_after": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 18446744073709551615
+    },
+    "observed_free_space_delta_bytes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": -18446744073709551615,
+      "maximum": 18446744073709551615
+    },
+    "cancelled_reported": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
