@@ -2,7 +2,7 @@
 
 A developer-workspace cleanup tool: a Rust CLI with a portable Codex/Claude skill. The product goal is to reclaim storage through reviewed, explicitly approved cleanup with verifiable results. The current implementation provides the read-only audit foundation; the next milestone is [approved space reclamation](docs/APPROVED-CLEANUP.md).
 
-**Status:** v0.9.0 cleanup executor source is under development and NOT validated or installed. Published audit validation remains Milestone 8. Every candidate remains protected. No file is declared proven disposable. The Rust CLI rejects Linux and macOS scanning; the optional Python metadata survey has separate platform limits below. See [current milestone validation](docs/MILESTONE-8.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** v0.9.0 cleanup executor is on the development branch. Windows compilation, 17 refusal tests and lint pass; successful deletion is unvalidated. Not installed or released. Published audit validation remains Milestone 8. Every candidate remains protected. No file is declared proven disposable. The Rust CLI rejects Linux and macOS scanning; the optional Python metadata survey has separate platform limits below. See [current milestone validation](docs/MILESTONE-8.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -87,4 +87,4 @@ The skill bundles a read-only Python 3.10+ [resumable metadata survey](skills/co
 
 ## Approved cleanup development
 
-A separate `cleanup plan`, `cleanup review`, and `cleanup execute` flow is being implemented. The executor is not ready for real use: compilation and destructive synthetic validation are pending. Audit and portable survey commands remain read-only. See [development status and restricted scope](docs/MILESTONE-9.md).
+A separate `cleanup plan`, `cleanup review`, and `cleanup execute` flow is being implemented. The executor is not ready for real use: Windows compilation and refusal tests pass, but approved destructive synthetic validation is pending. Audit and portable survey commands remain read-only. See [development status and restricted scope](docs/MILESTONE-9.md).
