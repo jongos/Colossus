@@ -1,10 +1,10 @@
 //! First cleanup executor: explicit regular files, interactive exact-plan approval.
 //! Audit reports/checkpoints are never executable plans. No recursive deletion.
-#[cfg(windows)]
-use std::fs::OpenOptions;
 use crate::platform;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+#[cfg(windows)]
+use std::fs::OpenOptions;
 use std::{
     collections::BTreeSet,
     fs::File,
