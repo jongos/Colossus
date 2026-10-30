@@ -7,13 +7,15 @@ import argparse
 import collections
 import ctypes
 import json
+import hashlib
 import os
 from pathlib import Path
 import stat
 import sys
 import time
 
-VERSION = 2
+VERSION = 3
+MEMBERSHIP_LIMIT = 10000
 SKIP_ATTRIBUTES = 0x400 | 0x1000 | 0x40000 | 0x400000
 CATEGORIES = {
     "build": {"build", "dist", "target", "out", "output"},
@@ -29,6 +31,24 @@ CATEGORIES = {
 def signature(s):
     return [s.st_dev, s.st_ino, s.st_mode, s.st_size, s.st_mtime_ns,
             getattr(s, "st_file_attributes", 0)]
+
+
+def child_names_digest(path):
+    """Bounded membership evidence independent of directory timestamp resolution."""
+    names = []
+    deadline = time.monotonic() + 1.0
+    with os.scandir(path) as children:
+        for child in children:
+            if len(names) >= MEMBERSHIP_LIMIT or time.monotonic() >= deadline:
+                raise OSError("directory membership verification limit; coverage unresolved")
+            names.append(child.name)
+    return hashlib.sha256(json.dumps(sorted(names), ensure_ascii=True).encode("ascii")).hexdigest()
+
+
+def unchanged(path, row):
+    return (signature(checked_stat(path)) == row["signature"] and
+            (row["kind"] != "directory" or
+             child_names_digest(path) == row.get("child_names_digest")))
 
 
 def skipped(s):
@@ -137,6 +157,7 @@ def observe(state, path):
     elif stat.S_ISDIR(s.st_mode):
         row["kind"] = "directory"
         row["enumerated"] = False
+        row["child_names_digest"] = child_names_digest(path)
     elif stat.S_ISREG(s.st_mode):
         row["kind"] = "file"
         row["logical_bytes"] = s.st_size
@@ -182,7 +203,7 @@ def run(state, budget=10000, seconds=10, max_entries=1000000):
             if row is None or root in failed:
                 continue
             try:
-                if signature(checked_stat(root)) != row["signature"]:
+                if not unchanged(root, row):
                     raise OSError("root metadata/identity changed; start a fresh survey")
             except OSError as error:
                 issue(state, root, "stale_or_unavailable_root", error)
@@ -221,7 +242,7 @@ def run(state, budget=10000, seconds=10, max_entries=1000000):
                 if row["enumerated"] or any(Path(path).is_relative_to(p) for p in failed):
                     state["pending"].pop(0)
                     continue
-                if signature(checked_stat(path)) != row["signature"]:
+                if not unchanged(path, row):
                     issue(state, path, "stale_directory", "directory changed; restart a fresh survey")
                     state["failed_paths"].append(path)
                     failed.add(path)
@@ -272,7 +293,7 @@ def run(state, budget=10000, seconds=10, max_entries=1000000):
                 state["validation_index"] += 1
                 continue
             try:
-                if signature(checked_stat(path)) != state["entries"][path]["signature"]:
+                if not unchanged(path, state["entries"][path]):
                     issue(state, path, "changed", "metadata changed since inventory")
             except OSError as error:
                 state["failed_paths"].append(path)

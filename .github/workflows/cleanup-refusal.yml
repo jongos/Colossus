@@ -2,7 +2,7 @@ name: Cleanup refusal tests (no deletion)
 on:
   workflow_dispatch:
   push:
-    branches: [dev/approved-cleanup]
+    branches: [main, dev/approved-cleanup]
 permissions:
   contents: read
 jobs:

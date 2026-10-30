@@ -25,7 +25,7 @@ Formatting, Clippy with warnings denied, the standalone release build and instal
 
 ## Installation and next work
 
-Published v0.6.0 is installed at `C:\Users\jongo\.local\bin\colossus.exe` and `C:\Users\jongo\.codex\skills\colossus`; version and source equality were checked. The previous installation is preserved in this task's `work/installed-v0.5-backup`. A new terminal may be needed to refresh PATH; the updated skill is available next turn.
+Published v0.6.0 is installed at `%USERPROFILE%\.local\bin\colossus.exe` and `%USERPROFILE%\.codex\skills\colossus`; version and source equality were checked. The previous installation is preserved in a local installation backup. A new terminal may be needed to refresh PATH.
 
 The local checkout development binary is v0.7.0; it does not replace the installed published version. Automatic or declared workspace-membership validation, authenticated predicate/build-context checks and dedicated-host filesystem coverage remain future milestones. No build execution, cleanup, quarantine, signing or deletion operation was added.
 

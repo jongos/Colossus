@@ -134,3 +134,9 @@ allocation failures, sparse-shaped files, retained copies, ambiguous equal-size
 outputs, output/scope guards and stale-directory detection. Native compressed
 files, real ACL denial, cloud provider behavior and macOS/Linux execution still
 require platform-specific validation; mock fallback coverage is not an OS test.
+
+## Directory membership verification
+
+Checkpoint format 3 records a SHA-256 digest of sorted immediate child names in addition to directory metadata. Resume and final revalidation compare both, so an added child cannot be hidden solely by an unchanged directory timestamp. Older checkpoints require a fresh survey. Membership collection is limited to 10,000 children and one second per directory check; exceeding either limit produces incomplete coverage, never a complete result. These checks add bounded work outside the entry batch counter. OS calls can still block. Observations remain non-atomic: changes after validation or changes that revert between observations are not detected.
+
+Non-deleting regression command: `python tests/test_survey_membership.py -v`. Its fixtures remain under the repository `work/` directory.

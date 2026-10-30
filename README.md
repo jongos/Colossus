@@ -2,7 +2,7 @@
 
 A developer-workspace cleanup tool: a Rust CLI with a portable Codex/Claude skill. The product goal is to reclaim storage through reviewed, explicitly approved cleanup with verifiable results. Version 0.9.0 adds restricted [approved exact-file deletion](skills/colossus/references/approved-cleanup.md) alongside the read-only audit.
 
-**Status:** v0.9.0 cleanup executor is on the development branch. Windows compilation, 17 refusal tests, lint and one explicitly approved synthetic deletion/preservation/space-observation test pass. This remains an experimental development build, not broad workspace cleanup support. Published audit validation remains Milestone 8. Every candidate remains protected. No file is declared proven disposable. The Rust CLI rejects Linux and macOS scanning; the optional Python metadata survey has separate platform limits below. See [current milestone validation](docs/MILESTONE-8.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
+**Status:** v0.9.0 includes approved exact-file deletion on main. Windows compilation, 17 refusal tests, lint and one explicitly approved synthetic deletion/preservation/space-observation test pass. This remains an experimental development build, not broad workspace cleanup support. Published audit validation remains Milestone 8. Audit candidates are never deletion authorization. No file is declared proven disposable. The Rust CLI rejects Linux and macOS scanning; the optional Python metadata survey has separate platform limits below. See [current milestone validation](docs/MILESTONE-8.md), [historical Phase 1 validation](docs/VALIDATION.md), and [limitations](docs/ARCHITECTURE.md) before relying on a report.
 
 ## Build and use
 
@@ -87,4 +87,4 @@ The skill bundles a read-only Python 3.10+ [resumable metadata survey](skills/co
 
 ## Approved cleanup development
 
-A separate `cleanup plan`, `cleanup review`, and `cleanup execute` flow is being implemented. The restricted executor passed Windows refusal tests and an explicitly approved synthetic deletion test. Review its exact scope and limitations before use; each real plan still requires fresh explicit human approval. Audit and portable survey commands remain read-only. See [development status and restricted scope](docs/MILESTONE-9.md).
+A separate `cleanup plan`, `cleanup review`, and `cleanup execute` flow is implemented in v0.9.0. The restricted executor passed Windows refusal tests and an explicitly approved synthetic deletion test. Review its exact scope and limitations before use; each real plan still requires fresh explicit human approval. Audit and portable survey commands remain read-only. See [development status and restricted scope](docs/MILESTONE-9.md).

@@ -1,7 +1,9 @@
 //! Windows opens deny delete-sharing: every ancestor remains pinned until traversal ends.
 //! No path-prefix-only trust decision and no reparse traversal.
+#[cfg(windows)]
+use std::fs::OpenOptions;
 use std::{
-    fs::{File, OpenOptions},
+    fs::File,
     io,
     path::{Component, Path, PathBuf},
 };

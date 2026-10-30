@@ -1,0 +1,21 @@
+name: Non-deleting issue regression checks
+on:
+  push:
+    branches: [review/issues-9-11]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-2025]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tests/test_survey_membership.py -v
+      - run: cargo clippy --all-targets --locked -- -D warnings

@@ -24,7 +24,7 @@ Complete signed and untrusted CLI runs each produce 12 consistency checks and 9 
 
 ## Installed version
 
-The published v0.5.0 skill is installed at `C:\Users\jongo\.codex\skills\colossus`, fetched from commit `ab1d59e`. It is available on the next turn. The tested v0.5.0 executable is installed at `C:\Users\jongo\.local\bin\colossus.exe`, an existing user PATH directory. A new terminal/app process may be needed to refresh PATH. `colossus --version` reports 0.5.0.
+The published v0.5.0 skill is installed at `%USERPROFILE%\.codex\skills\colossus`, fetched from commit `ab1d59e`. The tested v0.5.0 executable is installed at `%USERPROFILE%\.local\bin\colossus.exe`, an existing user PATH directory. A new terminal/app process may be needed to refresh PATH. `colossus --version` reports 0.5.0.
 
 Installed binary SHA256: `c906fe29d0982a7d7ef67e4055bc573c838c8eb6e6b1643cc0fd97e75e12d425`.
 

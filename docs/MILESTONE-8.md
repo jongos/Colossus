@@ -22,7 +22,7 @@ Formatting, Clippy with warnings denied, the standalone release build and instal
 
 ## Installation
 
-Published v0.7.0 is installed at `C:\Users\jongo\.local\bin\colossus.exe` and `C:\Users\jongo\.codex\skills\colossus`. The skill source and executable hash match the published milestone's local tested build. The previous v0.6.0 installation is preserved under this task's `work/installed-v0.6-backup`. The updated skill is available next turn.
+Published v0.7.0 is installed at `%USERPROFILE%\.local\bin\colossus.exe` and `%USERPROFILE%\.codex\skills\colossus`. The skill source and executable hash match the published milestone's local tested build. The previous v0.6.0 installation is preserved in a local installation backup.
 
 Installed binary SHA256: `8e78c55019514df0fa2c9eb651add967fe45150cb32815f89dba702974b144cf`.
 
