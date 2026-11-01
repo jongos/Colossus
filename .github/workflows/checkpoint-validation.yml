@@ -1,0 +1,23 @@
+name: Non-deleting checkpoint validation
+on:
+  push:
+    branches: [review/milestone-11]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checkpoint-tests:
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # Explicit non-deleting suites only; synthetic fixtures are retained.
+      - run: python tests/test_survey_checkpoint.py -v
+      - run: python tests/test_survey_membership.py -v

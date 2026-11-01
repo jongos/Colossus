@@ -8,6 +8,7 @@ import collections
 import ctypes
 import json
 import hashlib
+import math
 import os
 from pathlib import Path
 import stat
@@ -16,6 +17,7 @@ import time
 
 VERSION = 3
 MEMBERSHIP_LIMIT = 10000
+CHECKPOINT_BYTE_LIMIT = 64 * 1024 * 1024
 SKIP_ATTRIBUTES = 0x400 | 0x1000 | 0x40000 | 0x400000
 CATEGORIES = {
     "build": {"build", "dist", "target", "out", "output"},
@@ -56,6 +58,8 @@ def skipped(s):
 
 
 def validate_path(path):
+    if "\x00" in str(path):
+        raise ValueError("NUL in path refused")
     p = Path(path)
     if not p.is_absolute() or ".." in p.parts:
         raise ValueError("absolute paths without parent components required")
@@ -393,9 +397,103 @@ def compare(before, after):
                 qualification="Signed allocation delta includes retained copies only inside supplied roots. Not causal savings, free-space change, restoration proof or deletion authority.")
 
 
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate checkpoint JSON key")
+        result[key] = value
+    return result
+
+
+def validate_checkpoint(state):
+    """Validate structure without accessing any path stored in the checkpoint."""
+    def require(condition):
+        if not condition:
+            raise ValueError("invalid checkpoint structure; start a fresh survey")
+
+    def integer(value):
+        return type(value) is int and value >= 0
+
+    def timestamp(value):
+        return type(value) in (int, float) and math.isfinite(value)
+
+    require(type(state) is dict)
+    required = {"version", "roots", "platform", "entries", "pending", "validation",
+                "failed_paths", "issues", "phase", "validation_index", "invocations",
+                "started", "ended", "stop_reason"}
+    require(required <= state.keys())
+    require(type(state["version"]) is int)
+    require(type(state["platform"]) is str and type(state["phase"]) is str)
+    require(type(state["entries"]) is dict and type(state["issues"]) is list)
+    require(integer(state["validation_index"]) and integer(state["invocations"]))
+    require(timestamp(state["started"]) and
+            (state["ended"] is None or timestamp(state["ended"])))
+    require(state["stop_reason"] is None or type(state["stop_reason"]) is str)
+    for name in ("roots", "pending", "validation", "failed_paths"):
+        values = state[name]
+        require(type(values) is list and all(type(p) is str for p in values))
+        require(len(values) == len(set(values)))
+        for path in values:
+            validate_path(path)
+            require(path == os.path.normpath(path))
+    require(bool(state["roots"]))
+    for item in state["issues"]:
+        require(type(item) is dict and all(type(item.get(k)) is str
+                                         for k in ("path", "code", "detail")))
+        validate_path(item["path"])
+        require(in_scope(item["path"], state["roots"]))
+    for path, row in state["entries"].items():
+        validate_path(path)
+        require(path == os.path.normpath(path) and type(row) is dict)
+        require(row.get("path") == path and row.get("protected") is True)
+        require(row.get("kind") in ("file", "directory", "link_or_placeholder", "special"))
+        sig = row.get("signature")
+        require(type(sig) is list and len(sig) == 6 and all(type(n) is int for n in sig))
+        require(row.get("identity") == (f"{sig[0]}:{sig[1]}" if sig[1] else None))
+        require(integer(row.get("logical_bytes")) and integer(row.get("hard_links")))
+        require("allocated_bytes" in row and (row["allocated_bytes"] is None or
+                                              integer(row["allocated_bytes"])))
+        require(type(row.get("categories")) is list and
+                all(type(c) is str for c in row["categories"]))
+        require(timestamp(row.get("observed")))
+        if "validated_at" in row:
+            require(timestamp(row["validated_at"]))
+        if row["kind"] == "directory":
+            require(type(row.get("enumerated")) is bool)
+            digest = row.get("child_names_digest")
+            require(type(digest) is str and len(digest) == 64 and
+                    all(c in "0123456789abcdef" for c in digest))
+    if state["phase"] != "inventory":
+        require(not state["pending"])
+        require(all(root in state["entries"] or root in state["failed_paths"]
+                    for root in state["roots"]))
+
+
 def load(path, roots=None):
-    with open(path, encoding="utf-8") as stream:
-        state = json.load(stream)
+    # Bound input before JSON allocation; never open referenced survey targets.
+    before = checked_stat(path)
+    if skipped(before) or not stat.S_ISREG(before.st_mode):
+        raise ValueError("checkpoint must be a regular local file")
+    if before.st_size > CHECKPOINT_BYTE_LIMIT:
+        raise ValueError("checkpoint exceeds 64 MiB limit")
+    with open(path, "rb") as stream:
+        if signature(os.fstat(stream.fileno())) != signature(before):
+            raise ValueError("checkpoint changed before reading")
+        data = stream.read(CHECKPOINT_BYTE_LIMIT + 1)
+        if (len(data) > CHECKPOINT_BYTE_LIMIT or
+                signature(os.fstat(stream.fileno())) != signature(before)):
+            raise ValueError("checkpoint changed or exceeded size limit")
+    if signature(checked_stat(path)) != signature(before):
+        raise ValueError("checkpoint changed during reading")
+    def reject_constant(value):
+        raise ValueError("non-finite checkpoint JSON number")
+    try:
+        state = json.loads(data, object_pairs_hook=unique_object,
+                           parse_constant=reject_constant)
+        validate_checkpoint(state)
+    except (RecursionError, OverflowError) as error:
+        raise ValueError("checkpoint nesting or numeric limit exceeded") from error
     if state["version"] != VERSION:
         raise ValueError("unsupported checkpoint version")
     if state["platform"] != sys.platform:
@@ -419,6 +517,9 @@ def load(path, roots=None):
         raise ValueError("unfinished checkpoint marked done")
     if any(row["path"] != path for path, row in state["entries"].items()):
         raise ValueError("checkpoint entry path mismatch")
+    # Derived reports must not survive a resume as stale or forged output.
+    state.pop("summary", None)
+    state.pop("comparison", None)
     return state
 
 
@@ -445,12 +546,13 @@ def main():
     args = parser.parse_args()
     try:
         state = load(args.resume, args.root) if args.resume else start(args.root)
+        before = load(args.before, args.root) if args.before else None
         if args.resume and state["phase"] == "done":
             raise ValueError("completed checkpoint cannot resume; start a fresh survey")
         run(state, args.batch_entries, args.seconds, args.max_entries)
         state["summary"] = summarize(state)
         if args.before:
-            state["comparison"] = compare(load(args.before, args.root), state)
+            state["comparison"] = compare(before, state)
         save_new(args.output, state)
         presented = dict(state["summary"])
         if "comparison" in state:

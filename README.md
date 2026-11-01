@@ -87,4 +87,6 @@ The skill bundles a read-only Python 3.10+ [resumable metadata survey](skills/co
 
 ## Approved cleanup development
 
+Local Milestone 11 development adds bounded, structurally validated portable-survey checkpoint loading. See [scope and validation](docs/MILESTONE-11.md). It adds no deletion operation or approval bypass.
+
 A separate `cleanup plan`, `cleanup review`, and `cleanup execute` flow is implemented in v0.9.0. The restricted executor passed Windows refusal tests and an explicitly approved synthetic deletion test. Review its exact scope and limitations before use; each real plan still requires fresh explicit human approval. Audit and portable survey commands remain read-only. See [development status and restricted scope](docs/MILESTONE-9.md).

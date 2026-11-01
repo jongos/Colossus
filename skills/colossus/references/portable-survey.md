@@ -140,3 +140,11 @@ require platform-specific validation; mock fallback coverage is not an OS test.
 Checkpoint format 3 records a SHA-256 digest of sorted immediate child names in addition to directory metadata. Resume and final revalidation compare both, so an added child cannot be hidden solely by an unchanged directory timestamp. Older checkpoints require a fresh survey. Membership collection is limited to 10,000 children and one second per directory check; exceeding either limit produces incomplete coverage, never a complete result. These checks add bounded work outside the entry batch counter. OS calls can still block. Observations remain non-atomic: changes after validation or changes that revert between observations are not detected.
 
 Non-deleting regression command: `python tests/test_survey_membership.py -v`. Its fixtures remain under the repository `work/` directory.
+
+## Checkpoint input validation
+
+Resume and before/after inputs must be regular local files of at most 64 MiB. The loader checks observed identity/metadata around the read, rejects duplicate JSON keys, non-finite numbers, excessive nesting, malformed rows and invalid resume frontiers, and validates stored paths against the caller's explicit roots before surveying. Format 3 is retained. For larger checkpoints, start fresh using smaller disjoint scopes; do not edit a checkpoint to force acceptance.
+
+Validation establishes structural consistency, not authenticity or current filesystem truth. A forged but consistent checkpoint can still contain false observations. Metadata checks are not handle-pinned against ancestor replacement, and OS calls may block. Loading does not open embedded targets; resuming subsequently surveys the matching explicit roots. Stored summary and comparison fields are recomputed, not trusted. Checkpoints never authorize deletion.
+
+Run `python tests/test_survey_checkpoint.py -v` for retained-fixture, non-deleting validation tests.
