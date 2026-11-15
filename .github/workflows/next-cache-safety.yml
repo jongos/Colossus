@@ -1,0 +1,37 @@
+name: Next cache adapter safety
+on:
+  pull_request:
+    paths:
+      - 'scripts/next_cache_*.py'
+      - 'tests/test_next_cache_cleanup.py'
+      - 'docs/NEXT-CACHE-CLEANUP.md'
+      - 'skills/colossus/SKILL.md'
+      - '.github/workflows/next-cache-safety.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  safety:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Hosted synthetic adapter safety tests
+        shell: pwsh
+        run: |
+          python -B tests/test_next_cache_cleanup.py 2>&1 | Tee-Object -FilePath "$env:RUNNER_TEMP/next-cache-tests.log"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Generic cleanup refusal regression
+        run: cargo test --locked --test cleanup_refusal
+      - name: Preserve synthetic receipts and test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-cache-safety-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/next-cache-tests.log
+            ${{ runner.temp }}/colossus-next-synthetic-*/receipt.jsonl
+          retention-days: 14

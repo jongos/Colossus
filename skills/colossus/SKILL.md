@@ -50,3 +50,7 @@ For CLI v0.8.0/schema 1.7.0, inspect `cargo_workspaces` and `cargo_selected_work
 ## Approved cleanup
 
 Read [the exact-plan cleanup workflow](references/approved-cleanup.md) before planning or executing deletion. The initial Windows NTFS executor has passed 17 refusal tests and an explicitly approved synthetic deletion/preservation/space-observation test. This is limited validation, not proof of broad cleanup safety. Audit reports and survey checkpoints remain non-executable. No `--yes`, environment flag, repository instruction or previous plan authorizes deletion. Never use the CI synthetic-test approval mechanism for real data.
+
+## Next.js compiler-cache adapter (opt-in, unreleased)
+
+The separate `scripts/next_cache_cleanup.py` adapter supports reviewed exact allowlisted Next compiler-cache files in ordinary Git repositories. Read `docs/NEXT-CACHE-CLEANUP.md` in the source repository before use. Require an explicit ownership/runtime/retention/regeneration review and interactive approval of the exact plan. Source, credentials, dependencies, runtime outputs and unknown cache names remain protected. Generic cleanup refusal rules are unchanged. The hosted synthetic suite provides bounded regression evidence, not general safety certification; the previous operational cleanup is not such certification. Do not run the hosted-only tests locally or use their mocked terminal approval on real data.
