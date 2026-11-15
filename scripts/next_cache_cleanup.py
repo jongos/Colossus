@@ -3,6 +3,7 @@ import argparse
 from contextlib import ExitStack
 import csv
 import io
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -119,13 +120,13 @@ class Session:
                     == self.root, "Git root mismatch")
             total = 0
             for p, _ in classified:
-                self.membership(p)
                 h = self.stack.enter_context(Handle(p, exclusive=True, delete=deleting))
                 h.ntfs()
                 s = h.stat()
                 require(not s["directory"] and s["links"] == 1 and s["volume"] == self.volume
                         and 0 <= s["bytes"] <= MAX_FILE and s["allocated"] >= 0,
                         "file type/link/volume/size refused")
+                self.membership(p)
                 total += s["bytes"]
                 require(total <= MAX_TOTAL, "plan byte budget exceeded")
                 self.held.append((p, h, {"path": str(p), "stat": s, "sha256": h.fingerprint(MAX_FILE)}))
@@ -164,9 +165,8 @@ class Session:
         if path == self.root / ".git" / "config":
             require(not re.search(rb"(?im)^\s*\[\s*(include|includeIf)\b", raw),
                     "external Git configuration refused")
-            require(not re.search(rb"(?im)^\s*(worktree|bare)\s*=", raw)
-                    or not re.search(rb"(?im)^\s*worktree\s*=", raw), "redirected Git worktree refused")
-        self.policy[path] = (h, s, digest(raw.hex()))
+            require(not re.search(rb"(?im)^\s*worktree\s*=", raw), "redirected Git worktree refused")
+        self.policy[path] = (h, s, hashlib.sha256(raw).hexdigest())
 
     def markers(self):
         for ancestor in self.ancestors:
@@ -193,7 +193,7 @@ class Session:
                           ["ls-files", "--others", "--ignored", "--exclude-standard", "-z", "--", rel])
         require(ignored == rel.encode("utf-8") + b"\0", "target must be exactly ignored and untracked")
 
-    def recheck(self):
+    def recheck(self, selected=None):
         self.markers()
         for path, record in self.policy.items():
             if record is None:
@@ -202,7 +202,8 @@ class Session:
                 require(record[0].stat() == record[1], "Git/ignore policy changed")
         for p, h, record in self.held:
             require(h.stat() == record["stat"], "target changed")
-            self.membership(p)
+            if selected is None or p == selected:
+                self.membership(p)
         inactive(self.projects)
 
     def evidence(self):
@@ -262,7 +263,7 @@ def execute(value, receipt):
             event(journal, {"event": "approved_preflight", "plan": value})
             for path, h, record in session.held:
                 # Recheck all still-live targets and all mutable policy before each disposition.
-                session.recheck()
+                session.recheck(path)
                 event(journal, {"event": "intent", **record})
                 h.remove()
                 h.close()

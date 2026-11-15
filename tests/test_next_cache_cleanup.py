@@ -143,6 +143,7 @@ class CacheSafety(unittest.TestCase):
             hold.write_text("{}", encoding="utf-8")
             with self.subTest(parent=parent), self.assertRaisesRegex(ValueError, "retention"):
                 self.plan()
+            hold.rename(parent / 'released-synthetic-hold.json')
         self.assert_preserved()
 
     def test_runtime_metadata_failure_and_malformed(self):
@@ -357,6 +358,39 @@ class CacheSafety(unittest.TestCase):
         events = [json.loads(s) for s in self.receipt.read_text().splitlines()]
         self.assertEqual([e["event"] for e in events], ["approved_preflight", "intent"])
         self.assert_preserved()
+
+    def test_stale_ancestor_identity_refused(self):
+        plan = self.plan()
+        parent = self.target.parent
+        old = parent.with_name("old-production")
+        parent.rename(old)
+        parent.mkdir()
+        (old / self.target.name).rename(self.target)
+        (old / self.other.name).rename(self.other)
+        with self.assertRaisesRegex(ValueError, "stale plan"):
+            self.execute(plan)
+        self.assert_preserved()
+
+    def test_partial_failure_preserves_remaining_target(self):
+        second = self.target.with_name("2.pack")
+        second.write_bytes(b"second selected synthetic cache")
+        plan = self.plan([str(self.target), str(second)])
+        original = native.Handle.remove
+        def fail_second(handle):
+            if handle.path == second:
+                raise OSError("synthetic second disposition failure")
+            original(handle)
+        with patch.object(native.Handle, "remove", fail_second), self.assertRaises(OSError):
+            self.execute(plan)
+        self.assertFalse(self.target.exists())
+        self.assertTrue(second.exists())
+        self.assertEqual(self.other.read_bytes(), b"unselected synthetic cache")
+        events = [json.loads(s) for s in self.receipt.read_text().splitlines()]
+        self.assertEqual([e["event"] for e in events], ["approved_preflight", "intent", "removed", "intent"])
+        # An interrupted plan cannot be replayed against changed filesystem state.
+        with self.assertRaises((OSError, ValueError)):
+            self.execute(plan, receipt=self.fixture / "retry.jsonl")
+        self.assertTrue(second.exists())
 
     def test_synthetic_success_exact_selection_and_receipts(self):
         second = self.target.with_name("2.pack")
